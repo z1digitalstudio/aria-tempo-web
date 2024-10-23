@@ -1,3 +1,9 @@
+import Logo from "@/assets/brand/w-hotels.svg";
+
 export default function Home() {
-  return <main className="bg-tempo text-2xl">Tempo</main>;
+  return (
+    <main className="text-2xl text-creme">
+      Tempo <Logo />
+    </main>
+  );
 }
