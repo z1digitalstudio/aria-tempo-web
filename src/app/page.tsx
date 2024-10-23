@@ -1,5 +1,3 @@
 export default function Home() {
-  return (
-   <main>Tempo</main>
-  );
+  return <main className="bg-tempo text-2xl">Tempo</main>;
 }
