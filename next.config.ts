@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 // https://react-svgr.com/docs/next/
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function svgLoader(config: any) {
   // Grab the existing rule that handles SVG imports
   const fileLoaderRule = config.module.rules.find(

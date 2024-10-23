@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ["./src/**/*.{ts,tsx}"],
+  content: ["./src/**/*.{ts,tsx,svg}"],
   theme: {
     colors: {
       creme: {
@@ -13,6 +13,11 @@ const config: Config = {
         light: "#292929",
       },
       white: "#ffffff",
+    },
+    extend: {
+      backgroundImage: {
+        "whotels-splash": "url('/whotels/img/splash.png')",
+      },
     },
   },
 };
