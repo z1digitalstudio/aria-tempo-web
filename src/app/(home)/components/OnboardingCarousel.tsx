@@ -5,11 +5,12 @@
 import { WithClassName } from '@/types';
 import { ReactNode, useCallback } from 'react';
 
-import { Button } from '@/components/Button';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
+import { links } from '@/navigation';
+import { ButtonLink } from '@/components/cta/link';
 
 function createArrayOfSize(n: number) {
   return new Array(n).fill(undefined);
@@ -148,7 +149,7 @@ export function OnboardingCarousel<T extends ReactNode>({
             onDragEnd={handleDrag}
           />
         </div>
-        <section className="bg-creme mt-auto text-black pt-10 pb-4 px-4 max-w-5xl border-b-white border-b border-opacity-20 text-xl/6 text-center">
+        <section className="bg-creme mt-auto text-black pt-10 pb-4 px-4 border-b-white border-b border-opacity-20 text-xl/6 text-center">
           <div className="mb-10">
             <motion.p
               key={page}
@@ -180,7 +181,7 @@ export function OnboardingCarousel<T extends ReactNode>({
           </div>
 
           <div className="flex gap-2 flex-col">
-            <Button label="Get Started" isFullWidth />
+            <ButtonLink label="Get Started" isFullWidth href={links.sync} />
           </div>
         </section>
       </div>
