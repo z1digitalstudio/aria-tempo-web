@@ -1,7 +1,7 @@
 import Logo from '@/assets/brand/w-hotels.svg';
 import MenuIcon from '@/assets/icons/menu.svg';
 import { ButtonIcon } from '@/components/ButtonIcon';
-import { OnboardingCarousel } from './(home)/components/OnboardingCarousel';
+import { OnboardingCarousel } from './components/OnboardingCarousel';
 
 const CAROUSEL_ITEMS = [
   'Tempo is a music discovery tool for you to stay.',
@@ -10,7 +10,7 @@ const CAROUSEL_ITEMS = [
   'Tempo combines environmental factors, like the weather and time of day.',
 ];
 
-export default function Home() {
+export default function Splash() {
   return (
     <main className="size-full h-svh overflow-hidden text-white bg-black relative">
       <div className="opacity-70 absolute inset-0 bg-whotels-splash bg-[length:190%] bg-[left_top_30%] bg-no-repeat lg:bg-cover lg:bg-[left_top_30%]" />

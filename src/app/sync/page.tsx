@@ -1,10 +1,42 @@
-import { ButtonLink } from '@/components/cta/link';
+'use client';
+
 import Image from 'next/image';
 import SpotifyIcon from '@/assets/icons/spotify.svg';
 import { links } from '@/navigation';
 import { Button } from '@/components/cta/button';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import SyncExperience from './components/SyncExperience';
 
 export default function Sync() {
+  const { push } = useRouter();
+
+  // Todo: useReducer + persistence
+  const [syncState, setSyncState] = useState<
+    'not-synced' | 'syncing' | 'synced' | 'skipped'
+  >('not-synced');
+
+  const handleSyncSpotify = () => {
+    setSyncState('syncing');
+  };
+
+  const handleSkipSyncing = () => {
+    setSyncState('skipped');
+    push(links.home);
+  };
+
+  const handleSpotifySyncEnd = () => {
+    setSyncState('synced');
+  };
+
+  if (syncState === 'syncing') {
+    return <SyncExperience onSyncEnd={handleSpotifySyncEnd} />;
+  }
+
+  if (syncState === 'synced') {
+    return <h1>Pues ya estaría</h1>;
+  }
+
   return (
     <main className="relative">
       <div className="relative flex items-start size-full h-svh bg-[length:170%] bg-[center_top_-7.5rem]  lg:bg-contain bg-no-repeat bg-black lg:bg-center bg-[url('/whotels/illustration/sync/bg.png')]">
@@ -27,12 +59,17 @@ export default function Sync() {
         </div>
 
         <div className="flex gap-2 flex-col">
-          <Button Icon={SpotifyIcon} label="Connect to Spotify" isFullWidth />
-          <ButtonLink
+          <Button
+            Icon={SpotifyIcon}
+            label="Connect to Spotify"
+            isFullWidth
+            onClick={handleSyncSpotify}
+          />
+          <Button
             label="Connect later"
             variant="secondary"
             isFullWidth
-            href={links.home}
+            onClick={handleSkipSyncing}
           />
         </div>
       </section>

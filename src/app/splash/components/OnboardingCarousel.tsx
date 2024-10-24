@@ -3,9 +3,7 @@
 // Based on https://codesandbox.io/p/sandbox/framer-motion-image-gallery-pqvx3?from-embed
 
 import { WithClassName } from '@/types';
-import { ReactNode, useCallback } from 'react';
-
-import { useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
