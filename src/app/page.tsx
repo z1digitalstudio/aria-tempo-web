@@ -18,13 +18,12 @@ export default function Home() {
       <div className="opacity-70 absolute inset-0 bg-whotels-splash bg-[length:190%] bg-[left_top_30%] bg-no-repeat lg:bg-cover lg:bg-[left_top_30%]" />
       <div className="z-10 relative flex flex-col h-full">
         <header className="flex justify-between items-center py-8 px-4 max-w-5xl border-b-white border-b border-opacity-20">
-          <div className="flex items-baseline">
-            <span className="flex after:content-['|'] after:leading-3 items-baseline after:px-2">
-              <Logo />
-            </span>
-            <h1>Tempo</h1>
+          <div className="flex items-center">
+            <Logo />
+            <h1 className="mt-[0.1rem] font-helios uppercase text-sm/6 before:border-l before:pr-2 before:ml-2">
+              Tempo
+            </h1>
           </div>
-          {/* Todo: Focus style */}
           <ButtonIcon Icon={MenuIcon} label="Open menu" />
         </header>
         <section className="bg-creme mt-auto text-black py-10 px-4 max-w-5xl border-b-white border-b border-opacity-20 text-xl/6 text-center">
