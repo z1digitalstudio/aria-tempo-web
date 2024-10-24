@@ -28,7 +28,7 @@ export function Button({
         className,
         variants[variant],
         isFullWidth && 'w-full',
-        'flex gap-3 uppercase py-3 px-4 rounded-lg justify-center text-sm tracking-tight items-center',
+        'type-label-1 flex gap-3 uppercase py-3 px-4 rounded-lg justify-center text-sm tracking-tight items-center',
       )}
       {...props}
     >

@@ -40,7 +40,7 @@ const config: Config = {
       addUtilities({
         // Typographic styles
         '.type-number': {
-          '@apply font-wsupreme text-[6.25rem] leading-[1.4] tracking-[-4%]':
+          '@apply font-wsupreme font-normal text-[6.25rem] leading-[1.4] tracking-[-4%]':
             {},
         },
         '.type-headline-0': {
@@ -50,36 +50,38 @@ const config: Config = {
           '@apply font-helios uppercase text-[2.375rem] leading-[1]': {},
         },
         '.type-headline-2': {
-          '@apply font-wsupreme uppercase text-[2.5rem] leading-[1.1] tracking-[-4%]':
+          '@apply font-wsupreme font-medium uppercase text-[2.5rem] leading-[1.1] tracking-[-4%]':
             {},
         },
         '.type-headline-3': {
-          '@apply font-wsupreme text-[1.75rem] leading-[1.1] tracking-[-3%]':
+          '@apply font-wsupreme font-normal text-[1.75rem] leading-[1.1] tracking-[-3%]':
             {},
         },
         '.type-headline-4': {
-          '@apply font-wsupreme text-[1.5rem] leading-[1.1] tracking-[-4%]': {},
+          '@apply font-wsupreme font-normal text-[1.5rem] leading-[1.1] tracking-[-0.06rem]':
+            {},
         },
         '.type-body-1': {
-          '@apply font-wsupreme text-[1.3125rem] leading-[1.1] tracking-[-3%]':
+          '@apply font-wsupreme font-normal text-[1.3125rem] leading-[1.1] tracking-[-0.04rem]':
             {},
         },
         '.type-body-2': {
-          '@apply font-wsupreme text-[1rem] leading-[1.4] tracking-[-4%]': {},
+          '@apply font-wsupreme font-normal text-[1rem] leading-[1.4] tracking-[-0.04rem]':
+            {},
         },
         '.type-body-3': {
-          '@apply font-wsupreme text-[0.875rem] leading-[1.1] tracking-[-2%]':
+          '@apply font-wsupreme font-medium text-[0.875rem] leading-[1.1] tracking-[-0.0175rem]':
             {},
         },
         '.type-body-4': {
           '@apply font-helios text-[0.875rem] leading-[2]': {},
         },
         '.type-label-1': {
-          '@apply font-wsupreme uppercase text-[0.875rem] leading-[1.4] tracking-[-4%]':
+          '@apply font-wsupreme font-medium uppercase text-[0.875rem] leading-[1.4] tracking-[-0.035rem]':
             {},
         },
         '.type-label-2': {
-          '@apply font-wsupreme text-[0.75rem] leading-[1.1] tracking-[-4%]':
+          '@apply font-wsupreme font-medium text-[0.75rem] leading-[1.1] tracking-[-0.03rem]':
             {},
         },
       });
