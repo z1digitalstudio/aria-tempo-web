@@ -30,6 +30,6 @@ export function Carousel<T extends ReactNode>({
   );
 }
 
-function createArrayOfSize(n: number) {
+export function createArrayOfSize(n: number) {
   return new Array(n).fill(undefined);
 }
