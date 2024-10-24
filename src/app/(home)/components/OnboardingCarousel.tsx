@@ -81,19 +81,19 @@ const swipePower = (offset: number, velocity: number) => {
 const ITEMS = [
   {
     text: 'Tempo is a music discovery tool for your stay.',
-    image: '/whotels/illustration/onboarding/onboarding-1.png',
+    image: '/whotels/img/onboarding/onboarding-1.png',
   },
   {
     text: 'Tempo combines expert curation from tastemakers.',
-    image: '/whotels/illustration/onboarding/onboarding-2.png',
+    image: '/whotels/img/onboarding/onboarding-2.png',
   },
   {
     text: 'Tempo combines environmental factors, like the weather and time of day.',
-    image: '/whotels/illustration/onboarding/onboarding-3.png',
+    image: '/whotels/img/onboarding/onboarding-3.png',
   },
   {
     text: 'Tempo combines your music preferences, like mood and energy.',
-    image: '/whotels/illustration/onboarding/onboarding-4.png',
+    image: '/whotels/img/onboarding/onboarding-4.png',
   },
 ];
 

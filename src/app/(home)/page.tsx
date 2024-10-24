@@ -19,7 +19,9 @@ const formatCurrentTime = (options: Intl.DateTimeFormatOptions) => {
 export default function Home() {
   const [hasOnboarded, setHasOnboarded] = useState(false);
 
-  const handleOnboarding = () => setHasOnboarded(true);
+  const handleOnboarding = () => {
+    setHasOnboarded(true);
+  };
 
   if (!hasOnboarded) {
     return <OnboardingCarousel autoplay onStart={handleOnboarding} />;

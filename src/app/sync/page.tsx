@@ -11,7 +11,6 @@ import SyncExperience from './components/SyncExperience';
 export default function Sync() {
   const { push } = useRouter();
 
-  // Todo: useReducer + persistence
   const [syncState, setSyncState] = useState<
     'not-synced' | 'syncing' | 'synced' | 'skipped'
   >('not-synced');
@@ -21,28 +20,23 @@ export default function Sync() {
   };
 
   const handleSkipSyncing = () => {
-    setSyncState('skipped');
     push(links.home);
   };
 
   const handleSpotifySyncEnd = () => {
-    setSyncState('synced');
+    push(links.home);
   };
 
   if (syncState === 'syncing') {
     return <SyncExperience onSyncEnd={handleSpotifySyncEnd} />;
   }
 
-  if (syncState === 'synced') {
-    return <h1>Pues ya estaría</h1>;
-  }
-
   return (
     <main className="relative">
-      <div className="relative flex items-start size-full h-svh bg-[length:170%] bg-[center_top_-7.5rem]  lg:bg-contain bg-no-repeat bg-black lg:bg-center bg-[url('/whotels/illustration/sync/bg.png')]">
-        <div className="aspect-square lg:h-full lg:mt-[-4rem] w-full flex items-center justify-center">
+      <div className="relative flex items-start size-full h-svh bg-[length:170%] bg-[center_top_-7.5rem]  md:bg-contain bg-no-repeat bg-black md:bg-center bg-[url('/whotels/img/sync/bg.png')]">
+        <div className="aspect-square md:h-full md:mt-[-4rem] w-full flex items-center justify-center">
           <Image
-            src="/whotels/illustration/sync/shape.png"
+            src="/whotels/img/sync/shape.png"
             alt=""
             width={190}
             height={190}
