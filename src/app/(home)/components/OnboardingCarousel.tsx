@@ -3,12 +3,11 @@
 // Based on https://codesandbox.io/p/sandbox/framer-motion-image-gallery-pqvx3?from-embed
 
 import { WithClassName } from '@/types';
-import { ReactNode, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
-import { links } from '@/navigation';
-import { ButtonLink } from '@/components/cta/link';
+import { Button } from '@/components/cta/button';
 
 function createArrayOfSize(n: number) {
   return new Array(n).fill(undefined);
@@ -79,28 +78,47 @@ const swipePower = (offset: number, velocity: number) => {
   return Math.abs(offset) * velocity;
 };
 
-export function OnboardingCarousel<T extends ReactNode>({
-  items,
-  autoplay,
-}: WithClassName<{ items: T[]; autoplay: boolean | number }>) {
-  const [[page, direction], setPage] = useState([0, 0]);
-  const navigate = useCallback(
-    (n: number) => {
-      const getNewPage = (page: number, direction: number) => {
-        // Handle limits
-        if (page === items.length && direction) return 0;
-        if (page === -1 && direction === -1) return items.length - 1;
+const ITEMS = [
+  {
+    text: 'Tempo is a music discovery tool for your stay.',
+    image: '/whotels/illustration/onboarding/onboarding-1.png',
+  },
+  {
+    text: 'Tempo combines expert curation from tastemakers.',
+    image: '/whotels/illustration/onboarding/onboarding-2.png',
+  },
+  {
+    text: 'Tempo combines environmental factors, like the weather and time of day.',
+    image: '/whotels/illustration/onboarding/onboarding-3.png',
+  },
+  {
+    text: 'Tempo combines your music preferences, like mood and energy.',
+    image: '/whotels/illustration/onboarding/onboarding-4.png',
+  },
+];
 
-        return page;
-      };
-      setPage(([prevPage]) => {
-        const newDirection = prevPage < n ? 1 : -1;
-        const newPage = getNewPage(n, newDirection);
-        return [newPage, newDirection];
-      });
-    },
-    [items.length],
-  );
+export function OnboardingCarousel({
+  autoplay,
+  onStart,
+}: WithClassName<{
+  autoplay: boolean | number;
+  onStart: () => void;
+}>) {
+  const [[page, direction], setPage] = useState([0, 0]);
+  const navigate = useCallback((n: number) => {
+    const getNewPage = (page: number, direction: number) => {
+      // Handle limits
+      if (page === ITEMS.length && direction) return 0;
+      if (page === -1 && direction === -1) return ITEMS.length - 1;
+
+      return page;
+    };
+    setPage(([prevPage]) => {
+      const newDirection = prevPage < n ? 1 : -1;
+      const newPage = getNewPage(n, newDirection);
+      return [newPage, newDirection];
+    });
+  }, []);
 
   const handleDrag = (
     e: MouseEvent | TouchEvent | PointerEvent,
@@ -136,7 +154,7 @@ export function OnboardingCarousel<T extends ReactNode>({
             width={320}
             height={320}
             custom={direction}
-            src={`/whotels/illustration/onboarding/onboarding-${page + 1}.png`}
+            src={ITEMS[page].image}
             variants={imageVariants}
             initial="enter"
             animate="center"
@@ -161,10 +179,10 @@ export function OnboardingCarousel<T extends ReactNode>({
               {...dragProperties}
               onDragEnd={handleDrag}
             >
-              {items[page]}
+              {ITEMS[page].text}
             </motion.p>
             <nav className="flex gap-2 w-full items-center justify-center">
-              {createArrayOfSize(items.length).map((_, i) => (
+              {createArrayOfSize(ITEMS.length).map((_, i) => (
                 <button
                   key={i}
                   data-page={i}
@@ -179,7 +197,7 @@ export function OnboardingCarousel<T extends ReactNode>({
           </div>
 
           <div className="flex gap-2 flex-col">
-            <ButtonLink label="Get Started" isFullWidth href={links.sync} />
+            <Button label="Get Started" isFullWidth onClick={onStart} />
           </div>
         </section>
       </div>
