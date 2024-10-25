@@ -5,8 +5,40 @@ import { Header } from '@/components/header';
 import { createArrayOfSize } from '@/utils/array';
 import { links } from '@/utils/links';
 import clsx from 'clsx';
-import { motion, MotionValue, transform, useMotionValue } from 'framer-motion';
+import {
+  AnimatePresence,
+  motion,
+  MotionValue,
+  transform,
+  useAnimationControls,
+  useMotionValue,
+} from 'framer-motion';
 import { icon, numberOfItems } from './useIconTransform';
+import { useState } from 'react';
+
+const ringCardVariants = {
+  enter: {
+    y: 200,
+    opacity: 0,
+  },
+  center: {
+    y: 5,
+    opacity: 1,
+    transition: {
+      opacity: { duration: 0.5 },
+      y: { duration: 0.5 },
+    },
+  },
+  exit: {
+    scale: 0.95,
+    y: 200,
+    opacity: 0,
+    transition: {
+      y: { duration: 0.5 },
+      opacity: { duration: 0.5, delay: 0.2 },
+    },
+  },
+};
 
 // Create Bidimensional Array of 7 * 7
 const grid: number[][] = createArrayOfSize(
@@ -39,43 +71,82 @@ export default function Explore() {
 function Grid() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+  const [showInfo, setShowInfo] = useState(false);
+
+  const handleRingClick = ({ isCenter }: { isCenter: boolean }) => {
+    setShowInfo((prev) => (isCenter ? !prev : false));
+
+    const yOffset = showInfo ? 100 : isCenter ? -100 : 0;
+    controls.start({
+      y: y.get() + yOffset,
+      transition: { y: { duration: 0.5, delay: 0.1 } },
+    });
+  };
+  const controls = useAnimationControls();
 
   return (
-    <motion.div
-      style={{
-        width: gridSize,
-        height: gridSize,
-        x,
-        y,
-        transform: 'translate(-50%, -50%)',
-      }}
-      drag
-      dragSnapToOrigin
-      className="top-1/2 left-1/2 absolute inset-0 size-full explore-bg-overlay"
-    >
-      {grid.map((rows, rowIndex) =>
-        rows.map((colIndex) => (
-          <Item
-            key={`${rowIndex}-${colIndex}`}
-            row={rowIndex}
-            col={colIndex}
-            planeX={x}
-            planeY={y}
-          />
-        )),
-      )}
-    </motion.div>
+    <>
+      <motion.div
+        style={{
+          width: gridSize,
+          height: gridSize,
+          x,
+          y,
+          transform: 'translate(-50%, -50%)',
+        }}
+        drag={!showInfo}
+        dragSnapToOrigin
+        className="top-1/2 left-1/2 absolute inset-0 size-full explore-bg-overlay"
+        animate={controls}
+      >
+        {grid.map((rows, rowIndex) =>
+          rows.map((colIndex) => (
+            <Item
+              key={`${rowIndex}-${colIndex}`}
+              row={rowIndex}
+              col={colIndex}
+              onClick={handleRingClick}
+            />
+          )),
+        )}
+      </motion.div>
+      <AnimatePresence>
+        {showInfo && (
+          <motion.div
+            className="text-creme absolute -bottom-4 inset-x-4 border border-[#a59078] p-4 z-20"
+            style={{
+              background: 'radial-gradient(#40382E 0%, #000000 100%)',
+            }}
+            variants={ringCardVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+          >
+            <div className="border border-creme p-6 text-center">
+              <p className="type-label-1">Your unique score</p>
+              <p className="type-number">94.6</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
 function Item({
   row,
   col,
+  onClick,
 }: {
   row: number;
   col: number;
-  planeX: MotionValue<number>;
-  planeY: MotionValue<number>;
+  onClick: ({
+    isCenter,
+    pos,
+  }: {
+    isCenter: boolean;
+    pos: [number, number];
+  }) => void;
 }) {
   // We center the grid in the parent by applying some negative margins here
   const x = useMotionValue((gridSize / 2 + icon.size / 2) * -1);
@@ -93,10 +164,10 @@ function Item({
   const initScale = Math.min(initScaleX, initScaleY);
   scale.set(initScale);
 
-  const isCenterCircle = col === centerY && row === centerX;
+  const isCenter = col === centerY && row === centerX;
 
   return (
-    <motion.div
+    <motion.button
       style={{
         top: yOffset,
         left: xOffset,
@@ -107,14 +178,15 @@ function Item({
         scale,
       }}
       className={clsx(
-        isCenterCircle &&
+        isCenter &&
           "bg-[url('/whotels/img/explore/shape.png')] bg-transparent bg-center bg-contain z-20",
-        !isCenterCircle && 'flex explore-gradient-ring',
+        !isCenter && 'flex explore-gradient-ring',
         'rounded-full absolute bg-transparent flex items-center justify-center text-black',
       )}
+      onClick={() => onClick({ isCenter, pos: [row, col] })}
     >
       {/* {`${row}-${col}`} */}
       {/* {initScale.toFixed(2)} */}
-    </motion.div>
+    </motion.button>
   );
 }
