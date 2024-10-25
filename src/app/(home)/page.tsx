@@ -1,18 +1,15 @@
-'use client';
-
-import { useState } from 'react';
 import { OnboardingCarousel } from './views/onboardingFlow';
 import { HomeView } from './views/homeView';
 
-export default function Home() {
-  const [hasOnboarded, setHasOnboarded] = useState(false);
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { onboarded: boolean };
+}) {
+  const onboarded = (await searchParams)['onboarded'];
 
-  const handleOnboarding = () => {
-    setHasOnboarded(true);
-  };
-
-  if (!hasOnboarded) {
-    return <OnboardingCarousel autoplay onStart={handleOnboarding} />;
+  if (!onboarded) {
+    return <OnboardingCarousel autoplay />;
   }
 
   return <HomeView />;

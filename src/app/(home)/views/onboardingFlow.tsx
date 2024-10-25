@@ -9,6 +9,8 @@ import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
 import { Button } from '@/components/cta/button';
 import { createArrayOfSize } from '@/utils/array';
+import { ButtonLink } from '@/components/cta/link';
+import { links } from '@/utils/links';
 
 const MotionImage = motion.create(Image);
 
@@ -96,10 +98,8 @@ const ITEMS = [
 
 export function OnboardingCarousel({
   autoplay,
-  onStart,
 }: WithClassName<{
   autoplay: boolean | number;
-  onStart: () => void;
 }>) {
   const [[page, direction], setPage] = useState([0, 0]);
   const navigate = useCallback((n: number) => {
@@ -194,7 +194,7 @@ export function OnboardingCarousel({
           </div>
 
           <div className="flex gap-2 flex-col">
-            <Button label="Get Started" isFullWidth onClick={onStart} />
+            <ButtonLink label="Get Started" isFullWidth href={links.sync} />
           </div>
         </section>
       </main>

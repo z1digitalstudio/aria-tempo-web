@@ -1,5 +1,6 @@
 export const links = {
   sync: '/sync',
-  home: '/',
+  home: '/?onboarded=1',
+  onboarding: '/',
   explore: '/explore',
 };
