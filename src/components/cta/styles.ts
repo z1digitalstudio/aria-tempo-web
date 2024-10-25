@@ -12,7 +12,7 @@ export const getButtonClassName = ({
   theme = 'light',
   outline = true,
   isFullWidth,
-}: BaseProps) =>
+}: Pick<BaseProps, 'variant' | 'theme' | 'outline' | 'isFullWidth'>) =>
   clsx(
     isFullWidth && 'w-full',
     theme === 'dark' && 'dark',

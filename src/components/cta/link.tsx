@@ -7,10 +7,20 @@ export function ButtonLink({
   label,
   Icon,
   className,
+  isFullWidth,
+  theme,
+  variant,
+  outline,
   ...props
 }: ButtonLinkProps) {
   return (
-    <Link className={clsx(className, getButtonClassName(props))} {...props}>
+    <Link
+      className={clsx(
+        className,
+        getButtonClassName({ isFullWidth, theme, variant, outline }),
+      )}
+      {...props}
+    >
       {Icon && <Icon />}
       {label}
     </Link>
