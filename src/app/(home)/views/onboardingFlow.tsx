@@ -147,7 +147,7 @@ export function OnboardingCarousel({
 
   return (
     <AnimatePresence initial={false} custom={direction}>
-      <div className="flex flex-col h-full">
+      <main className="flex flex-col h-full">
         <div className="size-full flex items-center justify-center">
           <MotionImage
             key={page}
@@ -200,7 +200,7 @@ export function OnboardingCarousel({
             <Button label="Get Started" isFullWidth onClick={onStart} />
           </div>
         </section>
-      </div>
+      </main>
     </AnimatePresence>
   );
 }

@@ -167,9 +167,9 @@ export default function SyncExperience({
   const currentStep = ITEMS[step];
 
   return (
-    <main className="flex flex-col bg-black text-white">
+    <div className="flex flex-col bg-black text-white">
       <Header className="absolute inset-x-0 z-10" />
-      <div className="bg-black text-white size-full h-svh items-center justify-center flex overflow-hidden">
+      <main className="bg-black text-white size-full h-svh items-center justify-center flex overflow-hidden">
         <AnimatePresence mode="wait">
           {currentStep.type === 'init' && (
             <motion.p
@@ -250,7 +250,7 @@ export default function SyncExperience({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

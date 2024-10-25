@@ -1,3 +1,10 @@
+import { Header } from '@/components/header';
+
 export default function MusicProfile() {
-  return <main className="relative">Music Profile Experience</main>;
+  return (
+    <div className="relative bg-black text-white size-full h-svh">
+      <Header />
+      <main></main>
+    </div>
+  );
 }
