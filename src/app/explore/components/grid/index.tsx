@@ -11,7 +11,7 @@ import {
 } from 'framer-motion';
 import { icon, numberOfItems } from './useIconTransform';
 import { useState } from 'react';
-import { ringCardVariants } from './animation';
+import { ringCardVariants, bannerVariants } from './animation';
 
 // Create Bidimensional Array of 7 * 7
 const grid: number[][] = createArrayOfSize(
@@ -24,20 +24,34 @@ export function Grid() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const [showInfo, setShowInfo] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
+  const gridControls = useAnimationControls();
 
   const handleRingClick = ({ isCenter }: { isCenter: boolean }) => {
     setShowInfo((prev) => (isCenter ? !prev : false));
 
     const yOffset = showInfo ? 100 : isCenter ? -100 : 0;
-    controls.start({
+    gridControls.start({
       y: y.get() + yOffset,
       transition: { y: { duration: 0.5, delay: 0.1 } },
     });
   };
-  const controls = useAnimationControls();
 
   return (
     <>
+      <AnimatePresence>
+        {showBanner && (
+          <motion.div
+            className="text-creme absolute top-0 inset-x-0 p-4 z-20 bg-black-light bg-opacity-40 text-center"
+            variants={bannerVariants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+          >
+            <p className="type-label-1">Drag and tap to explore</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
         style={{
           width: gridSize,
@@ -49,7 +63,8 @@ export function Grid() {
         drag={!showInfo}
         dragSnapToOrigin
         className="top-1/2 left-1/2 absolute inset-0 size-full explore-bg-overlay"
-        animate={controls}
+        animate={gridControls}
+        onDragStart={() => setShowBanner(false)}
       >
         {grid.map((rows, rowIndex) =>
           rows.map((colIndex) => (

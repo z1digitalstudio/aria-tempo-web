@@ -19,6 +19,7 @@ const config: Config = {
       },
       black: {
         DEFAULT: '#000',
+        medium: '#111111',
         light: '#292929',
       },
       white: '#ffffff',
