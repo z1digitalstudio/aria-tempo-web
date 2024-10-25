@@ -11,7 +11,7 @@ import {
   useMotionValue,
 } from 'framer-motion';
 import { icon, numberOfItems } from './useIconTransform';
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { ringCardVariants, bannerVariants } from './animation';
 
 // Create Bidimensional Array of 7 * 7
@@ -41,6 +41,13 @@ export function Grid() {
 
   return (
     <>
+      <motion.div
+        animate={{
+          opacity: showInfo ? 0 : 1,
+          transition: { type: 'tween', duration: 1.2 },
+        }}
+        className="explore-bg-overlay explore-bg-overlay-gradient absolute inset-0 z-10 pointer-events-none"
+      />
       <AnimatePresence>
         {showBanner && (
           <motion.div
@@ -122,35 +129,35 @@ function Item({
   const y = useMotionValue((gridSize / 2) * -1);
 
   const scale = useMotionValue(1);
-  const xOffset = col * icon.size + (row % 2) * (icon.size / 2);
-  const yOffset = row * icon.size;
   const centerY = Math.floor(numberOfItems / 2);
   const centerX = Math.floor(numberOfItems / 2);
-
-  const edgeDistance = icon.size / 2;
-  const initScaleX = transform(
-    [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
-    [0, 1.05, 0],
-  )(xOffset);
-
-  const initScaleY = transform(
-    [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance].map((v) => {
-      // In the y axis i need to account for the displacement of rows i'm doing at xOffset ((row % 2) * (icon.size / 2))
-      const displacement = icon.size / 2;
-      return v - displacement;
-    }),
-    [0, 1.05, 0],
-  )(yOffset);
-
-  const initScale = Math.min(initScaleX, initScaleY);
-  scale.set(initScale);
-
-  const isCenter = col === centerY && row === centerX;
+  const xOffset = col * icon.size + (row % 2) * (icon.size / 2);
+  const yOffset = row * icon.size;
 
   // Keep track of our calculated x and y scales - we'll
   // set scale to the smallest of the two
-  const xScale = useRef(initScale);
-  const yScale = useRef(initScale);
+  const xScale = useRef(1);
+  const yScale = useRef(1);
+
+  useMemo(() => {
+    const edgeDistance = icon.size / 2;
+    const initScaleX = transform(
+      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
+      [0, 1.05, 0],
+    )(xOffset);
+
+    const initScaleY = transform(
+      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance].map((v) => {
+        // In the y axis i need to account for the displacement of rows i'm doing at xOffset ((row % 2) * (icon.size / 2))
+        const displacement = icon.size / 2;
+        return v - displacement;
+      }),
+      [0, 1.05, 0],
+    )(yOffset);
+
+    const initScale = Math.min(initScaleX, initScaleY);
+    scale.set(initScale), [];
+  }, []);
 
   planeX.on('change', (v: number) => {
     const screenOffset = v + xOffset + 20;
@@ -176,6 +183,8 @@ function Item({
     scale.set(Math.min(xScale.current, yScale.current));
   });
 
+  const isCenter = col === centerY && row === centerX;
+
   return (
     <motion.button
       style={{
@@ -191,9 +200,11 @@ function Item({
         isCenter &&
           "bg-[url('/whotels/img/explore/shape.png')] bg-transparent bg-center bg-contain z-20",
         !isCenter && 'flex explore-gradient-ring',
-        'rounded-full absolute bg-transparent flex items-center justify-center text-creme',
+        'rounded-full absolute bg-transparent flex items-center justify-center text-creme outline-none',
       )}
-      onClick={() => onClick({ isCenter })}
+      onClick={() => {
+        onClick({ isCenter });
+      }}
     >
       {/* Debugging values */}
       {/* {`${row}-${col}`}

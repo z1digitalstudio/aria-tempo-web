@@ -26,9 +26,6 @@
       #000000 100%
     );
   }
-  .explore-bg-overlay {
-    @apply before:explore-bg-overlay-gradient before:absolute before:inset-0 before:z-10 before:pointer-events-none;
-  }
 }
 
 @layer utilities {
