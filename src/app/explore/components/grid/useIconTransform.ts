@@ -5,7 +5,7 @@ export const numberOfItems = 7;
 
 export const icon = {
   margin: 0,
-  size: 140,
+  size: 160,
 };
 export const device = {
   width: 375,
@@ -59,13 +59,6 @@ export function useIconTransform({
   // set scale to the smallest of the two
   const xScale = useRef(1);
   const yScale = useRef(1);
-
-  const screenOffsetY = yOffset + 20;
-  const screenOffsetX = xOffset + 20;
-  const initYScale = mapScreenYToScale(screenOffsetY);
-  const initXScale = transform([0, 160, 320, 560], [0, 1, 1, 0])(screenOffsetX);
-
-  scale.set(Math.min(initXScale, initYScale));
 
   // We can useMemo as it'll work before any visual changes. With the underlying
   // production-ready code this will make the icon transformation work even in SSR

@@ -8,7 +8,7 @@ export default function Explore() {
     <div className="relative bg-black text-creme size-full h-svh flex flex-col">
       <Header />
       <main className="size-full flex-1 flex flex-col minv-h-0">
-        <div className="relative flex-1 overflow-hidden">
+        <div className="relative flex-1 overflow-hidden explore-bg-overlay">
           <Grid />
         </div>
         <footer className="border-t border-white border-opacity-20 py-6 px-4">

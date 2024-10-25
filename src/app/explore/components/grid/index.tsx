@@ -5,12 +5,13 @@ import clsx from 'clsx';
 import {
   AnimatePresence,
   motion,
+  MotionValue,
   transform,
   useAnimationControls,
   useMotionValue,
 } from 'framer-motion';
 import { icon, numberOfItems } from './useIconTransform';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ringCardVariants, bannerVariants } from './animation';
 
 // Create Bidimensional Array of 7 * 7
@@ -23,6 +24,7 @@ const gridSize = icon.size * numberOfItems;
 export function Grid() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
+
   const [showInfo, setShowInfo] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const gridControls = useAnimationControls();
@@ -62,7 +64,7 @@ export function Grid() {
         }}
         drag={!showInfo}
         dragSnapToOrigin
-        className="top-1/2 left-1/2 absolute inset-0 size-full explore-bg-overlay"
+        className="top-1/2 left-1/2 absolute inset-0 size-full"
         animate={gridControls}
         onDragStart={() => setShowBanner(false)}
       >
@@ -72,6 +74,8 @@ export function Grid() {
               key={`${rowIndex}-${colIndex}`}
               row={rowIndex}
               col={colIndex}
+              planeX={x}
+              planeY={y}
               onClick={handleRingClick}
             />
           )),
@@ -103,23 +107,21 @@ export function Grid() {
 function Item({
   row,
   col,
+  planeX,
+  planeY,
   onClick,
 }: {
   row: number;
   col: number;
-  onClick: ({
-    isCenter,
-    pos,
-  }: {
-    isCenter: boolean;
-    pos: [number, number];
-  }) => void;
+  planeX: MotionValue<number>;
+  planeY: MotionValue<number>;
+  onClick: ({ isCenter }: { isCenter: boolean }) => void;
 }) {
-  // We center the grid in the parent by applying some negative margins here
+  // We center the grid in its flex parent by applying some negative margins here
   const x = useMotionValue((gridSize / 2 + icon.size / 2) * -1);
   const y = useMotionValue((gridSize / 2) * -1);
-  const scale = useMotionValue(1);
 
+  const scale = useMotionValue(1);
   const xOffset = col * icon.size + (row % 2) * (icon.size / 2);
   const yOffset = row * icon.size;
   const centerY = Math.floor(numberOfItems / 2);
@@ -145,6 +147,35 @@ function Item({
 
   const isCenter = col === centerY && row === centerX;
 
+  // Keep track of our calculated x and y scales - we'll
+  // set scale to the smallest of the two
+  const xScale = useRef(initScale);
+  const yScale = useRef(initScale);
+
+  planeX.on('change', (v: number) => {
+    const screenOffset = v + xOffset + 20;
+
+    const edgeDistance = icon.size / 2;
+    xScale.current = transform(
+      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
+      [0, 1.05, 0],
+    )(screenOffset);
+
+    scale.set(Math.min(xScale.current, yScale.current));
+  });
+
+  planeY.on('change', (v: number) => {
+    const screenOffset = v + yOffset + 20;
+
+    const edgeDistance = icon.size / 2;
+    yScale.current = transform(
+      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
+      [0, 1.05, 0],
+    )(screenOffset);
+
+    scale.set(Math.min(xScale.current, yScale.current));
+  });
+
   return (
     <motion.button
       style={{
@@ -162,7 +193,7 @@ function Item({
         !isCenter && 'flex explore-gradient-ring',
         'rounded-full absolute bg-transparent flex items-center justify-center text-creme',
       )}
-      onClick={() => onClick({ isCenter, pos: [row, col] })}
+      onClick={() => onClick({ isCenter })}
     >
       {/* Debugging values */}
       {/* {`${row}-${col}`}
