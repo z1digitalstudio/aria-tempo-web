@@ -15,11 +15,11 @@ const grid: number[][] = createArrayOfSize(
 );
 const gridSize = icon.size * numberOfItems;
 
-export default function MusicProfile() {
+export default function Explore() {
   return (
     <div className="relative bg-black text-creme size-full h-svh flex flex-col">
       <Header />
-      <main className="size-full flex-1 flex flex-col min-h-0">
+      <main className="size-full flex-1 flex flex-col minv-h-0">
         <div className="relative flex-1 overflow-hidden">
           <Grid />
         </div>
@@ -51,7 +51,7 @@ function Grid() {
       }}
       drag
       dragSnapToOrigin
-      className="top-1/2 left-1/2 absolute inset-0 size-full debug"
+      className="top-1/2 left-1/2 absolute inset-0 size-full explore-bg-overlay"
     >
       {grid.map((rows, rowIndex) =>
         rows.map((colIndex) => (
@@ -93,6 +93,8 @@ function Item({
   const initScale = Math.min(initScaleX, initScaleY);
   scale.set(initScale);
 
+  const isCenterCircle = col === centerY && row === centerX;
+
   return (
     <motion.div
       style={{
@@ -105,9 +107,10 @@ function Item({
         scale,
       }}
       className={clsx(
-        row === centerY && 'bg-white',
-        col === centerY && row === centerX && 'bg-[red]',
-        'rounded-full absolute bg-creme flex items-center justify-center text-black',
+        isCenterCircle &&
+          "bg-[url('/whotels/img/explore/shape.png')] bg-transparent bg-center bg-contain z-20",
+        !isCenterCircle && 'flex explore-gradient-ring',
+        'rounded-full absolute bg-transparent flex items-center justify-center text-black',
       )}
     >
       {/* {`${row}-${col}`} */}

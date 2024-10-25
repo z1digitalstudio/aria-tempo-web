@@ -9,6 +9,28 @@
     -webkit-font-smoothing: antialiased;
   }
 }
+
+@layer components {
+  .explore-gradient-ring {
+    background: linear-gradient(to right, #000, #000),
+      linear-gradient(180deg, #22211e 0%, #dcd7c4 100%);
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    border: 1px solid transparent;
+  }
+
+  .explore-bg-overlay-gradient {
+    background: radial-gradient(
+      58.83% 52.64% at 50% 49.88%,
+      rgba(0, 0, 0, 0) 0%,
+      #000000 100%
+    );
+  }
+  .explore-bg-overlay {
+    @apply before:explore-bg-overlay-gradient before:absolute before:inset-0 before:-top-1/2 before:-left-1/2 before:z-10 before:pointer-events-none;
+  }
+}
+
 @layer utilities {
   .debug {
     border: 1px solid red;

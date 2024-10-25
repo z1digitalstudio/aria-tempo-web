@@ -24,7 +24,7 @@ export default function Sync() {
   };
 
   const handleSpotifySyncEnd = () => {
-    push(links.musicProfile);
+    push(links.explore);
   };
 
   if (syncState === 'syncing') {
