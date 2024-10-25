@@ -1,16 +1,20 @@
+'use client';
+
 import { ButtonLink } from '@/components/cta/link';
 import { Header } from '@/components/header';
 import { createArrayOfSize } from '@/utils/array';
 import { links } from '@/utils/links';
+import clsx from 'clsx';
+import { motion } from 'framer-motion';
 
-const grid: number[][] = createArrayOfSize(5, [0, 1, 2, 3, 4, 5]);
+const grid: number[][] = createArrayOfSize(5, [0, 1, 2, 3, 4]);
 
 export default function MusicProfile() {
   return (
     <div className="relative bg-black text-creme size-full h-svh flex flex-col">
       <Header />
       <main className="size-full flex-1 flex flex-col min-h-0">
-        <div className="overflow-hidden">
+        <div className="relative flex-1">
           <Grid />
         </div>
         <footer className="border-t border-white border-opacity-20 py-6 px-4">
@@ -32,14 +36,24 @@ export const icon = {
 };
 
 function Grid() {
+  const gridWidth = (icon.size + icon.margin) * 5;
+  const gridHeight = icon.size * 5;
+
   return (
-    <div className="relative w-[1000px] h-[1000px] top-0 left-[-225px]">
+    <motion.div
+      className="absolute top-1/2 left-1/2"
+      style={{
+        width: gridWidth,
+        height: gridHeight,
+        transform: 'translate(-50%, -50%)',
+      }}
+    >
       {grid.map((rows, rowIndex) =>
         rows.map((colIndex) => (
           <Item key={`${rowIndex}-${colIndex}`} row={rowIndex} col={colIndex} />
         )),
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -49,7 +63,6 @@ function Item({ row, col }: { row: number; col: number }) {
     (row % 2) * ((icon.size + icon.margin) / 2);
   const yOffset = row * icon.size;
 
-  // to do this in tailwind i need to be able to gen classnames on runtime for this values
   return (
     <div
       style={{
@@ -58,7 +71,11 @@ function Item({ row, col }: { row: number; col: number }) {
         width: icon.size,
         height: icon.size,
       }}
-      className="absolute bg-creme rounded-full"
-    ></div>
+      className={clsx(
+        row === 2 && 'bg-white',
+        col === 2 && row === 2 && 'bg-[red]',
+        'absolute bg-creme rounded-full',
+      )}
+    />
   );
 }
