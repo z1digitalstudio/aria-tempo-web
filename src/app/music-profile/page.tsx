@@ -9,17 +9,9 @@ export default function MusicProfile() {
   return (
     <div className="relative bg-black text-creme size-full h-svh flex flex-col">
       <Header />
-      <main className="size-full flex-1 debug flex flex-col">
-        <div className="relative flex-1">
-          {grid.map((rows, rowIndex) =>
-            rows.map((colIndex) => (
-              <Item
-                key={`${rowIndex}-${colIndex}`}
-                row={rowIndex}
-                col={colIndex}
-              />
-            )),
-          )}
+      <main className="size-full flex-1 flex flex-col min-h-0">
+        <div className="overflow-hidden">
+          <Grid />
         </div>
         <footer className="border-t border-white border-opacity-20 py-6 px-4">
           <ButtonLink
@@ -35,9 +27,21 @@ export default function MusicProfile() {
 }
 
 export const icon = {
-  margin: 10,
-  size: 50,
+  margin: 20,
+  size: 100,
 };
+
+function Grid() {
+  return (
+    <div className="relative w-[1000px] h-[1000px] top-0 left-[-225px]">
+      {grid.map((rows, rowIndex) =>
+        rows.map((colIndex) => (
+          <Item key={`${rowIndex}-${colIndex}`} row={rowIndex} col={colIndex} />
+        )),
+      )}
+    </div>
+  );
+}
 
 function Item({ row, col }: { row: number; col: number }) {
   const xOffset =
@@ -48,8 +52,13 @@ function Item({ row, col }: { row: number; col: number }) {
   // to do this in tailwind i need to be able to gen classnames on runtime for this values
   return (
     <div
-      style={{ position: 'absolute', top: yOffset, left: xOffset }}
-      className="bg-creme size-[50px] rounded-full"
+      style={{
+        top: yOffset,
+        left: xOffset,
+        width: icon.size,
+        height: icon.size,
+      }}
+      className="absolute bg-creme rounded-full"
     ></div>
   );
 }
