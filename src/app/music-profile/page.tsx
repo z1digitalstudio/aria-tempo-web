@@ -6,12 +6,14 @@ import { createArrayOfSize } from '@/utils/array';
 import { links } from '@/utils/links';
 import clsx from 'clsx';
 import { motion, MotionValue, transform, useMotionValue } from 'framer-motion';
-import { icon, numberOfItems, useIconTransform } from './useIconTransform';
+import { icon, numberOfItems } from './useIconTransform';
 
+// Create Bidimensional Array of 7 * 7
 const grid: number[][] = createArrayOfSize(
   numberOfItems,
-  [0, 1, 2, 3, 4, 5, 6],
+  createArrayOfSize(numberOfItems).map((_, i) => i),
 );
+const gridSize = icon.size * numberOfItems;
 
 export default function MusicProfile() {
   return (
@@ -35,22 +37,21 @@ export default function MusicProfile() {
 }
 
 function Grid() {
-  const gridWidth = icon.size * 5 + icon.margin * 4;
-  const gridHeight = icon.size * 5;
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
   return (
     <motion.div
       style={{
-        // width: gridWidth,
-        // height: gridHeight,
+        width: gridSize,
+        height: gridSize,
         x,
         y,
+        transform: 'translate(-50%, -50%)',
       }}
       drag
       dragSnapToOrigin
-      className="absolute inset-0 size-full debug"
+      className="top-1/2 left-1/2 absolute inset-0 size-full debug"
     >
       {grid.map((rows, rowIndex) =>
         rows.map((colIndex) => (
@@ -70,33 +71,27 @@ function Grid() {
 function Item({
   row,
   col,
-  planeX,
-  planeY,
 }: {
   row: number;
   col: number;
   planeX: MotionValue<number>;
   planeY: MotionValue<number>;
 }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
+  // We center the grid in the parent by applying some negative margins here
+  const x = useMotionValue((gridSize / 2 + icon.size / 2) * -1);
+  const y = useMotionValue((gridSize / 2) * -1);
   const scale = useMotionValue(1);
 
-  const xOffset =
-    col * (icon.size + icon.margin) +
-    (row % 2) * ((icon.size + icon.margin) / 2) -
-    icon.margin * 2;
+  const xOffset = col * icon.size + (row % 2) * (icon.size / 2);
   const yOffset = row * icon.size;
-
   const centerY = Math.floor(numberOfItems / 2);
   const centerX = Math.floor(numberOfItems / 2);
 
-  const screenOffsetY = yOffset + 20;
-  const screenOffsetX = xOffset + 20;
-  const initYScale = transform([0, 150, 300], [0, 1, 0])(screenOffsetY);
-  const initXScale = transform([0, 187.5, 375], [0, 1, 0])(screenOffsetX);
+  const initScaleX = transform([0, gridSize / 2, gridSize], [0, 1, 0])(xOffset);
+  const initScaleY = 1;
 
-  scale.set(Math.min(initXScale, initYScale));
+  const initScale = Math.min(initScaleX, initScaleY);
+  scale.set(initScale);
 
   return (
     <motion.div
@@ -112,10 +107,11 @@ function Item({
       className={clsx(
         row === centerY && 'bg-white',
         col === centerY && row === centerX && 'bg-[red]',
-        'absolute bg-creme rounded-full flex items-center justify-center text-black',
+        'rounded-full absolute bg-creme flex items-center justify-center text-black',
       )}
     >
-      {Math.min(initXScale, initYScale).toFixed(2)}
+      {/* {`${row}-${col}`} */}
+      {/* {initScale.toFixed(2)} */}
     </motion.div>
   );
 }

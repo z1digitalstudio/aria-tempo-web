@@ -4,8 +4,8 @@ import { MotionValue, transform } from 'framer-motion';
 export const numberOfItems = 7;
 
 export const icon = {
-  margin: 10,
-  size: 375 / numberOfItems - (10 * numberOfItems - 1) / numberOfItems,
+  margin: 0,
+  size: 160,
 };
 export const device = {
   width: 375,
