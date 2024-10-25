@@ -2,6 +2,14 @@ import type { Config } from 'tailwindcss';
 import plugin from 'tailwindcss/plugin';
 
 const config: Config = {
+  /**
+   * Setting dark mode to manual because this app doesn't have themes, so we don't need to listen for user preferences.
+   * We only need the dark class to control the styles at component level (ex button)
+   *
+   * Docs: https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+   **/
+
+  darkMode: 'selector',
   content: ['./src/**/*.{ts,tsx,svg}'],
   theme: {
     colors: {

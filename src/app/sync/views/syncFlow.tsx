@@ -167,7 +167,7 @@ export default function SyncExperience({
   const currentStep = ITEMS[step];
 
   return (
-    <div className="flex flex-col bg-black text-white">
+    <div className="flex flex-col bg-black">
       <Header className="absolute inset-x-0 z-10" />
       <main className="bg-black text-white size-full h-svh items-center justify-center flex overflow-hidden">
         <AnimatePresence mode="wait">

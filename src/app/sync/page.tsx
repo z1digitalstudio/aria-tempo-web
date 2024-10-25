@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import SpotifyIcon from '@/assets/icons/spotify.svg';
-import { links } from '@/navigation/links';
+import { links } from '@/utils/links';
 import { Button } from '@/components/cta/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -62,6 +62,7 @@ export default function Sync() {
           <Button
             label="Connect later"
             variant="secondary"
+            outline={false}
             isFullWidth
             onClick={handleSkipSyncing}
           />

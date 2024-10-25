@@ -8,7 +8,9 @@ export type BaseProps = {
   label: string;
   Icon?: SVGComponent;
   variant?: 'primary' | 'secondary';
+  outline?: boolean;
   isFullWidth?: boolean;
+  theme?: 'dark' | 'light';
 };
 
 export type ButtonProps = WithClassName<

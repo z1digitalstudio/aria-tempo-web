@@ -8,10 +8,7 @@ import clsx from 'clsx';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
 import { Button } from '@/components/cta/button';
-
-function createArrayOfSize(n: number) {
-  return new Array(n).fill(undefined);
-}
+import { createArrayOfSize } from '@/utils/array';
 
 const MotionImage = motion.create(Image);
 

@@ -8,7 +8,7 @@ export const Header = ({ className }: { className?: string }) => {
     <header
       className={clsx(
         className,
-        'flex justify-between items-center py-6 px-4 border-b-white border-b border-opacity-20',
+        'flex justify-between items-center text-creme py-6 px-4 border-b-white border-b border-opacity-20',
       )}
     >
       <div className="flex items-center">
