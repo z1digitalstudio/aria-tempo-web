@@ -4,7 +4,7 @@ import { HomeView } from './views/homeView';
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { onboarded: boolean };
+  searchParams: Promise<{ onboarded: string }>;
 }) {
   const onboarded = (await searchParams)['onboarded'];
 
