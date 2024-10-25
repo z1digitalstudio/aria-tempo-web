@@ -1,9 +1,11 @@
 import { useMemo, useRef } from 'react';
 import { MotionValue, transform } from 'framer-motion';
 
+export const numberOfItems = 7;
+
 export const icon = {
-  margin: 20,
-  size: 100,
+  margin: 10,
+  size: 375 / numberOfItems - (10 * numberOfItems - 1) / numberOfItems,
 };
 export const device = {
   width: 375,
