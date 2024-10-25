@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import Image from 'next/image';
-import { Button } from '@/components/cta/button';
 import { createArrayOfSize } from '@/utils/array';
 import { ButtonLink } from '@/components/cta/link';
 import { links } from '@/utils/links';
