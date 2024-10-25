@@ -10,8 +10,8 @@ import {
   useAnimationControls,
   useMotionValue,
 } from 'framer-motion';
-import { icon, numberOfItems } from './useIconTransform';
-import { useMemo, useRef, useState } from 'react';
+import { icon, numberOfItems } from './constants';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { ringCardVariants, bannerVariants } from './animation';
 
 // Create Bidimensional Array of 7 * 7
@@ -84,6 +84,7 @@ export function Grid() {
               planeX={x}
               planeY={y}
               onClick={handleRingClick}
+              showInfo={showInfo}
             />
           )),
         )}
@@ -117,16 +118,20 @@ function Item({
   planeX,
   planeY,
   onClick,
+  showInfo,
 }: {
   row: number;
   col: number;
   planeX: MotionValue<number>;
   planeY: MotionValue<number>;
+  showInfo: boolean;
   onClick: ({ isCenter }: { isCenter: boolean }) => void;
 }) {
   // We center the grid in its flex parent by applying some negative margins here
   const x = useMotionValue((gridSize / 2 + icon.size / 2) * -1);
   const y = useMotionValue((gridSize / 2) * -1);
+  const opacity = useMotionValue(0);
+  const controls = useAnimationControls();
 
   const scale = useMotionValue(1);
   const centerY = Math.floor(numberOfItems / 2);
@@ -139,54 +144,50 @@ function Item({
   const xScale = useRef(1);
   const yScale = useRef(1);
 
-  useMemo(() => {
-    const edgeDistance = icon.size / 2;
-    const initScaleX = transform(
-      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
-      [0, 1.05, 0],
-    )(xOffset);
+  useLayoutEffect(() => {
+    const transformScaleOnX = (v: number) => {
+      const screenOffset = v + xOffset + 20;
 
-    const initScaleY = transform(
-      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance].map((v) => {
-        // In the y axis i need to account for the displacement of rows i'm doing at xOffset ((row % 2) * (icon.size / 2))
-        const displacement = icon.size / 2;
-        return v - displacement;
-      }),
-      [0, 1.05, 0],
-    )(yOffset);
+      const edgeDistance = icon.size / 2;
+      xScale.current = transform(
+        [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
+        [0, 1.05, 0],
+      )(screenOffset);
 
-    const initScale = Math.min(initScaleX, initScaleY);
-    scale.set(initScale), [];
-  }, []);
+      scale.set(Math.min(xScale.current, yScale.current));
+    };
+    const transformScaleOnY = (v: number) => {
+      const screenOffset = v + yOffset + 20;
 
-  planeX.on('change', (v: number) => {
-    const screenOffset = v + xOffset + 20;
+      const edgeDistance = icon.size / 2;
+      yScale.current = transform(
+        [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
+        [0, 1.05, 0],
+      )(screenOffset);
 
-    const edgeDistance = icon.size / 2;
-    xScale.current = transform(
-      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
-      [0, 1.05, 0],
-    )(screenOffset);
+      scale.set(Math.min(xScale.current, yScale.current));
+    };
 
-    scale.set(Math.min(xScale.current, yScale.current));
-  });
+    planeY.on('change', transformScaleOnY);
+    planeX.on('change', transformScaleOnX);
 
-  planeY.on('change', (v: number) => {
-    const screenOffset = v + yOffset + 20;
+    transformScaleOnX(0);
+    transformScaleOnY(0);
 
-    const edgeDistance = icon.size / 2;
-    yScale.current = transform(
-      [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
-      [0, 1.05, 0],
-    )(screenOffset);
-
-    scale.set(Math.min(xScale.current, yScale.current));
-  });
+    // When it's ready, set opacity to 1
+    if (opacity.get() === 0) {
+      controls.start({
+        opacity: 1,
+        transition: { opacity: { duration: 0.2 } },
+      });
+    }
+  }, [planeX, planeY, scale, xOffset, yOffset, controls, opacity]);
 
   const isCenter = col === centerY && row === centerX;
 
   return (
     <motion.button
+      key={showInfo.toString()}
       style={{
         top: yOffset,
         left: xOffset,
@@ -195,7 +196,9 @@ function Item({
         x,
         y,
         scale,
+        opacity,
       }}
+      animate={controls}
       className={clsx(
         isCenter &&
           "bg-[url('/whotels/img/explore/shape.png')] bg-transparent bg-center bg-contain z-20",
