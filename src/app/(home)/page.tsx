@@ -1,5 +1,5 @@
 import { OnboardingCarousel } from './views/onboardingFlow';
-import { HomeView } from './views/homeView';
+import HomeView from './views/homeView';
 
 export default async function Home({
   searchParams,

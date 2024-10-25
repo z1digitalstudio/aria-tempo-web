@@ -1,7 +1,11 @@
+'use client';
+
 import LobbyIcon from '@/assets/icons/lobby.svg';
 import PoolIcon from '@/assets/icons/pool.svg';
 import WeatherIcon from '@/assets/icons/weather.svg';
 import { Button } from '@/components/cta/button';
+import { motion } from 'framer-motion';
+import { animate } from './animation';
 
 const ZONES = [
   { label: 'Lobby', icon: LobbyIcon },
@@ -12,25 +16,42 @@ const formatCurrentTime = (options: Intl.DateTimeFormatOptions) => {
   return new Intl.DateTimeFormat('en-US', options).format(new Date(Date.now()));
 };
 
-export function HomeView() {
+export default function HomeView() {
   return (
-    <main className="relative flex flex-col h-full">
-      <section className="flex-1 border-b-white border-b border-opacity-20">
-        <div className="pt-8 pb-8 px-4 flex flex-col h-full">
-          <div className="flex justify-between items-baseline mb-auto">
+    <motion.main
+      className="relative flex flex-col h-full"
+      variants={animate.root}
+      initial="enter"
+      animate="center"
+    >
+      <section className="flex-1 ">
+        <motion.div
+          variants={animate.content}
+          className="pt-8 pb-8 px-4 flex flex-col h-full"
+        >
+          <motion.div
+            variants={animate.info}
+            className="flex justify-between items-baseline mb-auto"
+          >
             <p className="type-label-1">
               {formatCurrentTime({ weekday: 'long', hour: 'numeric' })}
             </p>
             <p className="type-label-1 flex gap-1 items-center">
               68º <WeatherIcon />
             </p>
-          </div>
-          <h1 className="type-headline-4 text-balance max-w-[11rem]  mb-auto">
+          </motion.div>
+          <motion.h1
+            variants={animate.title}
+            className="type-headline-4 text-balance max-w-[11rem] mb-auto"
+          >
             Welcome to West Hollywood
-          </h1>
-        </div>
+          </motion.h1>
+        </motion.div>
       </section>
-      <footer className="pt-6 pb-8 px-4 ">
+      <motion.footer
+        className="pt-6 pb-8 px-4 border-t-white border-t border-opacity-20"
+        variants={animate.footer}
+      >
         <p className="type-label-1 mb-4">Select your listening experience</p>
         <div className="w-full flex gap-3 flex-wrap">
           {ZONES.map((zone) => {
@@ -45,7 +66,7 @@ export function HomeView() {
           })}
           <Button label="Listen on my phone" isFullWidth />
         </div>
-      </footer>
-    </main>
+      </motion.footer>
+    </motion.main>
   );
 }
