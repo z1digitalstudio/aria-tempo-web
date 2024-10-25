@@ -2,11 +2,11 @@
 
 import Image from 'next/image';
 import SpotifyIcon from '@/assets/icons/spotify.svg';
-import { links } from '@/navigation';
+import { links } from '@/navigation/links';
 import { Button } from '@/components/cta/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SyncExperience from './components/SyncExperience';
+import SyncExperience from './views/syncFlow';
 
 export default function Sync() {
   const { push } = useRouter();
@@ -24,7 +24,7 @@ export default function Sync() {
   };
 
   const handleSpotifySyncEnd = () => {
-    push(links.home);
+    push(links.musicProfile);
   };
 
   if (syncState === 'syncing') {
