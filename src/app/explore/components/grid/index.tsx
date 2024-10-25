@@ -110,8 +110,20 @@ function Item({
   const centerY = Math.floor(numberOfItems / 2);
   const centerX = Math.floor(numberOfItems / 2);
 
-  const initScaleX = transform([0, gridSize / 2, gridSize], [0, 1, 0])(xOffset);
-  const initScaleY = 1;
+  const edgeDistance = icon.size / 2;
+  const initScaleX = transform(
+    [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance],
+    [0, 1.05, 0],
+  )(xOffset);
+
+  const initScaleY = transform(
+    [edgeDistance * -1, gridSize / 2, gridSize + edgeDistance].map((v) => {
+      // In the y axis i need to account for the displacement of rows i'm doing at xOffset ((row % 2) * (icon.size / 2))
+      const displacement = icon.size / 2;
+      return v - displacement;
+    }),
+    [0, 1.05, 0],
+  )(yOffset);
 
   const initScale = Math.min(initScaleX, initScaleY);
   scale.set(initScale);
@@ -133,12 +145,14 @@ function Item({
         isCenter &&
           "bg-[url('/whotels/img/explore/shape.png')] bg-transparent bg-center bg-contain z-20",
         !isCenter && 'flex explore-gradient-ring',
-        'rounded-full absolute bg-transparent flex items-center justify-center text-black',
+        'rounded-full absolute bg-transparent flex items-center justify-center text-creme',
       )}
       onClick={() => onClick({ isCenter, pos: [row, col] })}
     >
-      {/* {`${row}-${col}`} */}
-      {/* {initScale.toFixed(2)} */}
+      {/* Debugging values */}
+      {/* {`${row}-${col}`}
+      <br />
+      {initScale.toFixed(2)} */}
     </motion.button>
   );
 }
