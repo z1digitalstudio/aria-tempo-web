@@ -11,7 +11,7 @@ import CloseIcon from '@/assets/icons/close.svg';
 import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
 
-export const gridContainerVariants = {
+const gridContainerVariants = {
   enter: {
     opacity: 0,
   },
