@@ -13,6 +13,8 @@ import {
 import { icon, numberOfItems } from './constants';
 import { useLayoutEffect, useRef, useState } from 'react';
 import { ringCardVariants, bannerVariants } from './animation';
+import { Banner } from './banner';
+import { Card } from './card';
 
 // Create Bidimensional Array of 7 * 7
 const grid: number[][] = createArrayOfSize(
@@ -49,6 +51,7 @@ export function Grid() {
 
   return (
     <>
+      {/* Radial bg overlay which makes the circles darker on the edges of the screen */}
       <motion.div
         animate={{
           opacity: showInfo ? 0 : 1,
@@ -56,19 +59,9 @@ export function Grid() {
         }}
         className="explore-bg-overlay explore-bg-overlay-gradient absolute inset-0 z-10 pointer-events-none"
       />
-      <AnimatePresence>
-        {showBanner && (
-          <motion.div
-            className="text-creme absolute top-0 inset-x-0 p-4 z-20 bg-black-light bg-opacity-40 text-center"
-            variants={bannerVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-          >
-            <p className="type-label-1">Drag and tap to explore</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
+      {/* "Drag or tap to explore" banner */}
+      <Banner show={showBanner} />
 
       {/** The purpose of this div parent wrapping the circle grid container is having a clicable area the size of the grid container
        * so when the user interacts with any point of it we can handle the closing of the card */}
@@ -110,25 +103,7 @@ export function Grid() {
           )}
         </motion.div>
       </motion.div>
-      <AnimatePresence>
-        {showInfo && (
-          <motion.div
-            className="text-creme absolute -bottom-4 inset-x-4 border border-[#a59078] p-2 z-20"
-            style={{
-              background: 'radial-gradient(#40382E 0%, #000000 100%)',
-            }}
-            variants={ringCardVariants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-          >
-            <div className="border border-creme p-6 text-center">
-              <p className="type-label-1">Your unique score</p>
-              <p className="type-number">94.6</p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <Card show={showInfo} />
     </>
   );
 }
