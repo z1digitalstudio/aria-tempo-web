@@ -61,6 +61,8 @@ export function Grid() {
   // These are the coord values of the drag plane
   const planeX = useMotionValue(0);
   const planeY = useMotionValue(0);
+  const planeLeft = useMotionValue(0);
+  const planeTop = useMotionValue(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [center, setCenter] = useState([0, 0]);
 
@@ -70,7 +72,8 @@ export function Grid() {
       const centerOffsetX = (containerRect.width - gridSize) / 2;
       const centerOffsetY = (containerRect.height - gridSize) / 2;
 
-      setCenter([centerOffsetX, centerOffsetY]);
+      planeLeft.set(centerOffsetX);
+      planeTop.set(centerOffsetY);
     }
   }, [planeX, planeY]);
 
@@ -79,20 +82,27 @@ export function Grid() {
   const gridControls = useAnimationControls();
 
   const handleItemClick = ({ isCenter }: { isCenter: boolean }) => {
-    // Show information card
-    setShowInfo((prev) => (isCenter ? !prev : false));
+    if (!isCenter) return;
+    setShowInfo((prev) => (isCenter ? !prev : prev));
 
     // Handle animation of elements
-    const yOffset = showInfo ? 100 : isCenter ? -100 : 0;
+    const yOffset = showInfo ? 100 : -100;
     gridControls.start({
-      y: planeY.get() + yOffset,
-      transition: { y: { duration: 0.5, delay: 0.1 } },
+      top: planeTop.get() + yOffset,
+      scale: showInfo ? 1 : 0.8,
+      transition: { duration: 0.5 },
     });
   };
 
-  const handleClickOnDragSurface = () => {
+  const hideCard = () => {
     if (showInfo) {
-      handleItemClick({ isCenter: false });
+      setShowInfo(false);
+
+      gridControls.start({
+        top: planeTop.get() + 100,
+        scale: 1,
+        transition: { duration: 0.5 },
+      });
     }
   };
 
@@ -116,8 +126,8 @@ export function Grid() {
         className="relative size-full flex items-center justify-center"
         drag={showInfo}
         dragSnapToOrigin
-        onDrag={handleClickOnDragSurface}
-        onClickCapture={handleClickOnDragSurface}
+        onDrag={hideCard}
+        onClickCapture={hideCard}
         ref={containerRef}
       >
         <motion.div
@@ -126,8 +136,8 @@ export function Grid() {
             height: gridSize,
             x: planeX,
             y: planeY,
-            left: center[0],
-            top: center[1],
+            left: planeLeft,
+            top: planeTop,
           }}
           drag={!showInfo}
           dragSnapToOrigin
@@ -254,8 +264,9 @@ function Item({
       planeY.on('change', transformScaleOnY);
       planeX.on('change', transformScaleOnX);
 
-      const xScale = transformScaleOnX(0);
-      const yScale = transformScaleOnY(0);
+      // Set inital scale
+      transformScaleOnX(0);
+      transformScaleOnY(0);
     },
     [planeX, planeY, scale, xOffset, yOffset, controls],
   );
