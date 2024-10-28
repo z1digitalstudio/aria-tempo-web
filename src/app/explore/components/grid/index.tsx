@@ -3,7 +3,6 @@
 import { createArrayOfSize } from '@/utils/array';
 import clsx from 'clsx';
 import {
-  animate,
   motion,
   MotionValue,
   transform,
@@ -11,13 +10,7 @@ import {
   useMotionValue,
   useTransform,
 } from 'framer-motion';
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { Card } from './card';
 import Image from 'next/image';
 import { Banner } from './banner';
@@ -64,7 +57,6 @@ export function Grid() {
   const planeLeft = useMotionValue(0);
   const planeTop = useMotionValue(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [center, setCenter] = useState([0, 0]);
 
   useLayoutEffect(() => {
     if (containerRef.current) {
@@ -75,7 +67,7 @@ export function Grid() {
       planeLeft.set(centerOffsetX);
       planeTop.set(centerOffsetY);
     }
-  }, [planeX, planeY]);
+  }, [planeLeft, planeTop]);
 
   const [showInfo, setShowInfo] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
@@ -194,16 +186,8 @@ function Item({
     onClick: ({ isCenter }: { isCenter: boolean }) => void;
   } & Circle
 >) {
-  // These are the coord values of the circle
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  // Debug state, can be deleted later
-  const [debugScale, setDebugScale] = useState<number>(1);
-
-  const controls = useAnimationControls();
-
   const scale = useMotionValue(circleProps.scale);
+  const [isCenter, setIsCenter] = useState(false);
 
   /**
    * This is the distance of this circle from the point 0,0 of the drag plane
@@ -218,48 +202,36 @@ function Item({
   const xScale = useRef(1);
   const yScale = useRef(1);
 
-  const transformScaleOnX = useCallback(
-    (v: number) => {
-      // This is the distance from the current x point in drag plane + the position x of circle
-      // We also add the circle radius cause we want to take the center of circle as reference, not the corner.
-      const currentOffset = v + xOffset + icon.size / 2;
-      const xRange = () => {
-        return [0, gridSize / 2, gridSize];
-      };
-
-      const result = transform(xRange(), [0, 1, 0])(currentOffset);
-      xScale.current = result;
-
-      setDebugScale(Math.min(xScale.current, yScale.current));
-      scale.set(Math.min(xScale.current, yScale.current));
-
-      return result;
-    },
-    [xOffset],
-  );
-
-  const transformScaleOnY = useCallback(
-    (v: number) => {
-      // This is the distance from the current y point in drag plane + the position y of circle
-      // We also add the circle radius cause we want to take the center of circle as reference, not the corner.
-      const currentOffset = v + yOffset + icon.size / 2;
-      const yRange = () => {
-        return [0, gridSize / 2, gridSize];
-      };
-      const result = transform(yRange(), [0, 1, 0])(currentOffset);
-
-      yScale.current = result;
-
-      setDebugScale(Math.min(xScale.current, yScale.current));
-      scale.set(Math.min(xScale.current, yScale.current));
-
-      return result;
-    },
-    [yOffset],
-  );
-
   useLayoutEffect(
     function setScale() {
+      const transformScaleOnX = (v: number) => {
+        // This is the distance from the current x point in drag plane + the position x of circle
+        // We also add the circle radius cause we want to take the center of circle as reference, not the corner.
+        const currentOffset = v + xOffset + icon.size / 2;
+        const xRange = () => {
+          return [0, gridSize / 2, gridSize];
+        };
+
+        const result = Math.min(xScale.current, xScale.current);
+        xScale.current = transform(xRange(), [0, 1, 0])(currentOffset);
+        scale.set(result);
+        setIsCenter(result > 0.9 && result < 1.1);
+      };
+
+      const transformScaleOnY = (v: number) => {
+        // This is the distance from the current y point in drag plane + the position y of circle
+        // We also add the circle radius cause we want to take the center of circle as reference, not the corner.
+        const currentOffset = v + yOffset + icon.size / 2;
+        const yRange = () => {
+          return [0, gridSize / 2, gridSize];
+        };
+
+        const result = Math.min(xScale.current, yScale.current);
+        yScale.current = transform(yRange(), [0, 1, 0])(currentOffset);
+        scale.set(result);
+        setIsCenter(result > 0.9 && result < 1.1);
+      };
+
       // Set scale when the drag plan is moving
       planeY.on('change', transformScaleOnY);
       planeX.on('change', transformScaleOnX);
@@ -268,21 +240,17 @@ function Item({
       transformScaleOnX(0);
       transformScaleOnY(0);
     },
-    [planeX, planeY, scale, xOffset, yOffset, controls],
+    [planeX, planeY, scale, xOffset, yOffset],
   );
-
-  const isCenter = scale.get() > 0.9 && scale.get() < 1.1;
 
   return (
     <motion.button
       key={showInfo.toString()}
       style={{
-        top: yOffset,
-        left: xOffset,
         width: icon.size,
         height: icon.size,
-        x,
-        y,
+        x: xOffset,
+        y: yOffset,
         scale,
       }}
       className={clsx(
