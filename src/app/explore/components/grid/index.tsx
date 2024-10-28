@@ -9,28 +9,70 @@ import {
   transform,
   useAnimationControls,
   useMotionValue,
+  useTransform,
 } from 'framer-motion';
-import { icon, numberOfItems } from './constants';
-import { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Card } from './card';
+import Image from 'next/image';
+import { Banner } from './banner';
 
-// Create Bidimensional Array of 7 * 7
-const grid: number[][] = createArrayOfSize(
-  numberOfItems,
-  createArrayOfSize(numberOfItems).map((_, i) => i),
-);
+const MotionImage = motion.create(Image);
+
+export const numberOfItems = 5;
+
+export const icon = {
+  margin: 0,
+  size: 160,
+};
 
 // Grid is as bigger as the circles if contains
 const gridSize = icon.size * numberOfItems;
+
+type Circle = {
+  x: number;
+  y: number;
+  src: string;
+  scale: number;
+};
+
+const createCircle = (col: number, row: number) => {
+  return {
+    x: 0,
+    y: 0,
+    src: `/whotels/img/explore/shape-${row}-${col}.png`,
+    scale: 1,
+  };
+};
+
+// Create Bidimensional Array of 7 * 7
+const grid: Circle[][] = createArrayOfSize(numberOfItems).map((_, row) => {
+  return createArrayOfSize(numberOfItems).map((_, col) => {
+    return createCircle(col, row);
+  });
+});
 
 export function Grid() {
   // These are the coord values of the drag plane
   const planeX = useMotionValue(0);
   const planeY = useMotionValue(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [center, setCenter] = useState([0, 0]);
 
-  // These are the coord values of the circle
-  const circleX = useMotionValue(0);
-  const circleY = useMotionValue(0);
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const centerOffsetX = (containerRect.width - gridSize) / 2;
+      const centerOffsetY = (containerRect.height - gridSize) / 2;
+
+      setCenter([centerOffsetX, centerOffsetY]);
+    }
+  }, [planeX, planeY]);
 
   const [showInfo, setShowInfo] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
@@ -54,37 +96,19 @@ export function Grid() {
     }
   };
 
-  const handleSnapToCenter = () => {
-    // Center of the viewport
-    const viewportCenterX = window.innerWidth / 2;
-    const viewportCenterY = window.innerHeight / 2;
-
-    // Center circle coordinates
-    const centerX = (numberOfItems / 2) * icon.size;
-    const centerY = (numberOfItems / 2) * icon.size;
-
-    // Calculate offsets to center the grid based on the center circle position
-    const offsetX = viewportCenterX - centerX;
-    const offsetY = viewportCenterY - centerY;
-
-    // Animate the grid's x and y to these offset values
-    animate(circleX, 175, { type: 'spring', stiffness: 300 });
-    animate(circleY, 175, { type: 'spring', stiffness: 300 });
-  };
-
   return (
     <>
       {/* Radial bg overlay which makes the circles darker on the edges of the screen */}
-      {/* <motion.div
+      <motion.div
         animate={{
           opacity: showInfo ? 0 : 1,
           transition: { type: 'tween', duration: 1.2 },
         }}
         className="explore-bg-overlay explore-bg-overlay-gradient absolute inset-0 z-10 pointer-events-none"
-      /> */}
+      />
 
       {/* "Drag or tap to explore" banner */}
-      {/* <Banner show={showBanner} /> */}
+      <Banner show={showBanner} />
 
       {/** The purpose of this div parent wrapping the circle grid container is having a clicable area the size of the grid container
        * so when the user interacts with any point of it we can handle the closing of the card */}
@@ -94,6 +118,7 @@ export function Grid() {
         dragSnapToOrigin
         onDrag={handleClickOnDragSurface}
         onClickCapture={handleClickOnDragSurface}
+        ref={containerRef}
       >
         <motion.div
           style={{
@@ -101,11 +126,12 @@ export function Grid() {
             height: gridSize,
             x: planeX,
             y: planeY,
-            // transform: 'translate(-50%, -50%)',
+            left: center[0],
+            top: center[1],
           }}
           drag={!showInfo}
-          // top-1/2 left-1/2 absolute inset-0
-          className="relative debug"
+          dragSnapToOrigin
+          className="absolute top-0 left-0"
           animate={gridControls}
           onDragStart={() => {
             setShowBanner(false);
@@ -115,20 +141,21 @@ export function Grid() {
             console.log(info.point);
             console.log({ event, info });
           }}
-          onDragEnd={handleSnapToCenter} // Call the function on drag end
+          dragTransition={{
+            power: 0.1,
+          }}
         >
           {grid.map((rows, rowIndex) =>
-            rows.map((colIndex) => (
+            rows.map((circle, colIndex) => (
               <Item
                 key={`${rowIndex}-${colIndex}`}
                 row={rowIndex}
                 col={colIndex}
                 planeX={planeX}
                 planeY={planeY}
-                x={circleX}
-                y={circleY}
                 onClick={handleItemClick}
                 showInfo={showInfo}
+                {...circle}
               />
             )),
           )}
@@ -144,28 +171,29 @@ function Item({
   col,
   planeX,
   planeY,
-  x,
-  y,
   onClick,
   showInfo,
-}: Readonly<{
-  row: number;
-  col: number;
-  x: MotionValue<number>;
-  y: MotionValue<number>;
-  planeX: MotionValue<number>;
-  planeY: MotionValue<number>;
-  showInfo: boolean;
-  onClick: ({ isCenter }: { isCenter: boolean }) => void;
-}>) {
+  ...circleProps
+}: Readonly<
+  {
+    row: number;
+    col: number;
+    planeX: MotionValue<number>;
+    planeY: MotionValue<number>;
+    showInfo: boolean;
+    onClick: ({ isCenter }: { isCenter: boolean }) => void;
+  } & Circle
+>) {
+  // These are the coord values of the circle
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
   // Debug state, can be deleted later
-  const [initialScale, setInitialScale] = useState<number>(1);
   const [debugScale, setDebugScale] = useState<number>(1);
 
-  const opacity = useMotionValue(1);
   const controls = useAnimationControls();
 
-  const scale = useMotionValue(1);
+  const scale = useMotionValue(circleProps.scale);
 
   /**
    * This is the distance of this circle from the point 0,0 of the drag plane
@@ -220,13 +248,6 @@ function Item({
     [yOffset],
   );
 
-  useLayoutEffect(function setInitialState() {
-    const xScale = transformScaleOnX(0);
-    const yScale = transformScaleOnY(0);
-
-    setInitialScale(Math.min(xScale, yScale));
-  }, []);
-
   useLayoutEffect(
     function setScale() {
       // Set scale when the drag plan is moving
@@ -235,15 +256,11 @@ function Item({
 
       const xScale = transformScaleOnX(0);
       const yScale = transformScaleOnY(0);
-
-      setInitialScale(Math.min(xScale, yScale));
     },
-    [planeX, planeY, scale, xOffset, yOffset, controls, opacity],
+    [planeX, planeY, scale, xOffset, yOffset, controls],
   );
 
-  const centerY = Math.floor(numberOfItems / 2);
-  const centerX = Math.floor(numberOfItems / 2);
-  const isCenter = col === centerY && row === centerX;
+  const isCenter = scale.get() > 0.9 && scale.get() < 1.1;
 
   return (
     <motion.button
@@ -256,23 +273,29 @@ function Item({
         x,
         y,
         scale,
-        opacity,
       }}
-      animate={controls}
       className={clsx(
-        isCenter &&
-          "bg-[url('/whotels/img/explore/shape.png')] bg-transparent bg-center bg-contain z-20",
-        !isCenter && 'flex explore-gradient-ring',
-        'rounded-full absolute bg-transparent flex items-center justify-center text-creme outline-none',
+        !isCenter ? 'explore-gradient-ring' : 'bg-opacity-0',
+        'rounded-full absolute text-creme outline-none',
       )}
       onClick={() => {
         onClick({ isCenter });
       }}
     >
+      <MotionImage
+        src={circleProps.src}
+        alt=""
+        fill
+        className="object-contain"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isCenter ? 1 : 0 }}
+        transition={{ stiffness: 0.5 }}
+      />
+      {/* {circleProps.src.split('/whotels/img/explore/')[1]} */}
       {/* Debugging values */}
-      {`${row}-${col}`}
+      {/* {`${row}-${col}`}
       <br />
-      {debugScale.toFixed(2)}
+      {debugScale.toFixed(2)} */}
     </motion.button>
   );
 }
