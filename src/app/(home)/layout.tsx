@@ -2,7 +2,7 @@
 
 import { Header } from '@/components/header';
 import { motion } from 'framer-motion';
-import { animate } from './views/homeView/animation';
+import { animate } from './animation';
 import { ReactNode } from 'react';
 
 export default function HomeLayout({ children }: { children: ReactNode }) {

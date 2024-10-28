@@ -1,22 +1,16 @@
 'use client';
 
-import LobbyIcon from '@/assets/icons/lobby.svg';
-import PoolIcon from '@/assets/icons/pool.svg';
 import WeatherIcon from '@/assets/icons/weather.svg';
-import { Button } from '@/components/cta/button';
 import { motion } from 'framer-motion';
 import { animate } from '../../animation';
-
-const ZONES = [
-  { label: 'Lobby', icon: LobbyIcon },
-  { label: 'Pool', icon: PoolIcon },
-];
+import { ButtonLink } from '@/components/cta/link';
+import { links } from '@/utils/links';
 
 const formatCurrentTime = (options: Intl.DateTimeFormatOptions) => {
   return new Intl.DateTimeFormat('en-US', options).format(new Date(Date.now()));
 };
 
-export default function HomeView() {
+export default function GetStartedView() {
   return (
     <motion.main
       className="relative flex flex-col h-full"
@@ -44,28 +38,12 @@ export default function HomeView() {
             variants={animate.title}
             className="type-headline-4 text-balance max-w-[11rem] mb-auto"
           >
-            Welcome to West Hollywood
+            Tempo is a music discovery tool for your stay.
           </motion.h1>
         </motion.div>
       </section>
-      <motion.footer
-        className="pt-6 pb-8 px-4 border-t-white border-t border-opacity-20"
-        variants={animate.footer}
-      >
-        <p className="type-label-1 mb-4">Select your listening experience</p>
-        <div className="w-full flex gap-3 flex-wrap">
-          {ZONES.map((zone) => {
-            return (
-              <Button
-                key={zone.label}
-                Icon={zone.icon}
-                label={zone.label}
-                className="flex flex-col flex-1 py-6"
-              />
-            );
-          })}
-          <Button label="Listen on my phone" isFullWidth />
-        </div>
+      <motion.footer className="pt-6 pb-8 px-4" variants={animate.footer}>
+        <ButtonLink href={links.sync} label="Get Started" isFullWidth />
       </motion.footer>
     </motion.main>
   );
