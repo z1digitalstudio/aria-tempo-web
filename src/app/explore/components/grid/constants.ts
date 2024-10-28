@@ -1,6 +1,6 @@
-export const numberOfItems = 7;
+export const numberOfItems = 5;
 
 export const icon = {
   margin: 0,
-  size: 160,
+  size: 70,
 };
