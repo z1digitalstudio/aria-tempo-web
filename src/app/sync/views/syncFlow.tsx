@@ -155,7 +155,6 @@ export default function SyncExperience({
     const interval = setInterval(() => {
       if (step === ITEMS.length - 1) {
         onSyncEnd();
-        return;
       } else {
         setStep(step + 1);
       }

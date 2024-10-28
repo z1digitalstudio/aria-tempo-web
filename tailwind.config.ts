@@ -32,6 +32,15 @@ const config: Config = {
       backgroundImage: {
         'whotels-splash': "url('/whotels/img/splash.png')",
       },
+      animation: {
+        modalf: 'modalf 0.15s ease-in-out',
+      },
+      keyframes: {
+        modalf: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+      },
     },
   },
 

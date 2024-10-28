@@ -92,7 +92,7 @@ export function Grid() {
       <AnimatePresence>
         {showInfo && (
           <motion.div
-            className="text-creme absolute -bottom-4 inset-x-4 border border-[#a59078] p-4 z-20"
+            className="text-creme absolute -bottom-4 inset-x-4 border border-[#a59078] p-2 z-20"
             style={{
               background: 'radial-gradient(#40382E 0%, #000000 100%)',
             }}
@@ -119,14 +119,14 @@ function Item({
   planeY,
   onClick,
   showInfo,
-}: {
+}: Readonly<{
   row: number;
   col: number;
   planeX: MotionValue<number>;
   planeY: MotionValue<number>;
   showInfo: boolean;
   onClick: ({ isCenter }: { isCenter: boolean }) => void;
-}) {
+}>) {
   // We center the grid in its flex parent by applying some negative margins here
   const x = useMotionValue((gridSize / 2 + icon.size / 2) * -1);
   const y = useMotionValue((gridSize / 2) * -1);
