@@ -20,7 +20,7 @@ export const numberOfItems = 5;
 
 export const icon = {
   margin: 0,
-  size: 180,
+  size: 160,
 };
 
 // Grid is as bigger as the circles if contains
@@ -97,12 +97,16 @@ export function Grid() {
     }
   };
 
+  const updateCenter = () => {
+    console.log(planeY.get(), planeX.get());
+  };
+
   return (
     <>
       {/* Radial bg overlay which makes the circles darker on the edges of the screen */}
       <motion.div
         animate={{
-          opacity: showInfo ? 0 : 1,
+          opacity: showInfo ? 0 : 0.7,
           transition: { type: 'tween', duration: 1.2 },
         }}
         className="explore-bg-overlay explore-bg-overlay-gradient absolute inset-0 z-10 pointer-events-none"
@@ -114,9 +118,8 @@ export function Grid() {
       {/** The purpose of this div parent wrapping the circle grid container is having a clicable area the size of the grid container
        * so when the user interacts with any point of it we can handle the closing of the card */}
       <motion.div
-        className="relative size-full flex items-center justify-center"
+        className="relative size-full flex items-center justify-center min-h-0"
         drag={showInfo}
-        dragSnapToOrigin
         onDrag={hideCard}
         onClickCapture={hideCard}
         ref={containerRef}
@@ -131,12 +134,12 @@ export function Grid() {
             top: planeTop,
           }}
           drag={!showInfo}
-          dragSnapToOrigin
           className="absolute top-0 left-0"
           animate={gridControls}
           onDragStart={() => {
             setShowBanner(false);
           }}
+          onDragEnd={updateCenter}
         >
           {grid.map((rows, rowIndex) =>
             rows.map((circle, colIndex) => (
@@ -181,7 +184,7 @@ function Item({
   const y = useMotionValue(0);
   const scale = useMotionValue(circleProps.scale);
   const [isCenter, setIsCenter] = useState(false);
-  const [, setDebugScale] = useState(0);
+  const [debugScale, setDebugScale] = useState(0);
 
   /**
    * This is the distance of this circle from the point 0,0 of the drag plane
@@ -203,11 +206,12 @@ function Item({
         // We also add the circle radius cause we want to take the center of circle as reference, not the corner.
         const currentOffset = v + xOffset + icon.size / 2;
 
-        const result = Math.min(xScale.current, yScale.current);
         xScale.current = transform(
-          [0, gridSize / 2 - 20, gridSize / 2 + 20, gridSize],
-          [0, 1, 1, 0],
+          [-100, gridSize / 2, gridSize + 100],
+          [0, 1, 0],
         )(currentOffset);
+
+        const result = Math.min(xScale.current, yScale.current);
         scale.set(result);
         setDebugScale(result);
         setIsCenter(result > 0.9 && result < 1.1);
@@ -218,11 +222,12 @@ function Item({
         // We also add the circle radius cause we want to take the center of circle as reference, not the corner.
         const currentOffset = v + yOffset + icon.size / 2;
 
-        const result = Math.min(xScale.current, yScale.current);
         yScale.current = transform(
-          [0, gridSize / 2 - 20, gridSize / 2 + 20, gridSize],
-          [0, 1, 1, 0],
+          [-100, gridSize / 2, gridSize + 100],
+          [0, 1, 0],
         )(currentOffset);
+
+        const result = Math.min(xScale.current, yScale.current);
         scale.set(result);
         setDebugScale(result);
         setIsCenter(result > 0.9 && result < 1.1);
@@ -236,7 +241,7 @@ function Item({
       transformScaleOnX(0);
       transformScaleOnY(0);
     },
-    [planeX, planeY, scale, xOffset, yOffset],
+    [scale, xOffset, yOffset],
   );
 
   return (
@@ -273,7 +278,7 @@ function Item({
       {/* {`${row}-${col}`}
       <br />
       {debugScale.toFixed(2)} */}
-      {/* {debugScale.toFixed(2)} */}
+      {debugScale.toFixed(2)}
     </motion.button>
   );
 }

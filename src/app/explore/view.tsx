@@ -85,7 +85,7 @@ export function ExploreView({ showResult }: Readonly<{ showResult: string }>) {
           />
         </div>
       </dialog>
-      <main className="size-full flex-1 flex flex-col minv-h-0">
+      <main className="size-full flex-1 flex flex-col min-h-0">
         <AnimatePresence>
           {!isModalOpen && (
             <motion.div
