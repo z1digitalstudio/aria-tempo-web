@@ -29,14 +29,22 @@ export function Grid() {
   const [showBanner, setShowBanner] = useState(true);
   const gridControls = useAnimationControls();
 
-  const handleRingClick = ({ isCenter }: { isCenter: boolean }) => {
+  const handleItemClick = ({ isCenter }: { isCenter: boolean }) => {
+    // Show information card
     setShowInfo((prev) => (isCenter ? !prev : false));
 
+    // Handle animation of elements
     const yOffset = showInfo ? 100 : isCenter ? -100 : 0;
     gridControls.start({
       y: y.get() + yOffset,
       transition: { y: { duration: 0.5, delay: 0.1 } },
     });
+  };
+
+  const handleClickOnDragSurface = () => {
+    if (showInfo) {
+      handleItemClick({ isCenter: false });
+    }
   };
 
   return (
@@ -61,33 +69,46 @@ export function Grid() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/** The purpose of this div parent wrapping the circle grid container is having a clicable area the size of the grid container
+       * so when the user interacts with any point of it we can handle the closing of the card */}
       <motion.div
-        style={{
-          width: gridSize,
-          height: gridSize,
-          x,
-          y,
-          transform: 'translate(-50%, -50%)',
-        }}
-        drag={!showInfo}
+        className="relative size-full"
+        drag={showInfo}
         dragSnapToOrigin
-        className="top-1/2 left-1/2 absolute inset-0 size-full"
-        animate={gridControls}
-        onDragStart={() => setShowBanner(false)}
+        onDrag={handleClickOnDragSurface}
+        onClickCapture={handleClickOnDragSurface}
       >
-        {grid.map((rows, rowIndex) =>
-          rows.map((colIndex) => (
-            <Item
-              key={`${rowIndex}-${colIndex}`}
-              row={rowIndex}
-              col={colIndex}
-              planeX={x}
-              planeY={y}
-              onClick={handleRingClick}
-              showInfo={showInfo}
-            />
-          )),
-        )}
+        <motion.div
+          style={{
+            width: gridSize,
+            height: gridSize,
+            x,
+            y,
+            transform: 'translate(-50%, -50%)',
+          }}
+          drag={!showInfo}
+          dragSnapToOrigin
+          className="top-1/2 left-1/2 absolute inset-0 size-full"
+          animate={gridControls}
+          onDragStart={() => {
+            setShowBanner(false);
+          }}
+        >
+          {grid.map((rows, rowIndex) =>
+            rows.map((colIndex) => (
+              <Item
+                key={`${rowIndex}-${colIndex}`}
+                row={rowIndex}
+                col={colIndex}
+                planeX={x}
+                planeY={y}
+                onClick={handleItemClick}
+                showInfo={showInfo}
+              />
+            )),
+          )}
+        </motion.div>
       </motion.div>
       <AnimatePresence>
         {showInfo && (
