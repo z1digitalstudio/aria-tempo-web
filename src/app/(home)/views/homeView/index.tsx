@@ -6,10 +6,12 @@ import WeatherIcon from '@/assets/icons/weather.svg';
 import { Button } from '@/components/cta/button';
 import { motion } from 'framer-motion';
 import { animate } from '../../animation';
+import { links } from '@/utils/links';
+import { ButtonLink } from '@/components/cta/link';
 
 const ZONES = [
-  { label: 'Lobby', icon: LobbyIcon },
-  { label: 'Pool', icon: PoolIcon },
+  { label: 'Lobby', icon: LobbyIcon, href: links.lobby },
+  { label: 'Pool', icon: PoolIcon, href: links.lobby },
 ];
 
 const formatCurrentTime = (options: Intl.DateTimeFormatOptions) => {
@@ -56,15 +58,20 @@ export default function HomeView() {
         <div className="w-full flex gap-3 flex-wrap">
           {ZONES.map((zone) => {
             return (
-              <Button
+              <ButtonLink
                 key={zone.label}
                 Icon={zone.icon}
                 label={zone.label}
                 className="flex flex-col flex-1 py-6"
+                href={zone.href}
               />
             );
           })}
-          <Button label="Listen on my phone" isFullWidth />
+          <ButtonLink
+            label="Listen on my phone"
+            isFullWidth
+            href={links.private}
+          />
         </div>
       </motion.footer>
     </motion.main>
