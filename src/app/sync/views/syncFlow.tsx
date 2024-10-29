@@ -1,9 +1,7 @@
 import { Header } from '@/components/header';
 import { AnimatePresence, motion } from 'framer-motion';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-const MotionImage = motion(Image);
 type Step = {
   type: 'init' | 'step' | 'end';
   text: string;
@@ -55,30 +53,6 @@ const textVariants = {
       opacity: { duration: 0.5 },
       scale: { delay: 0.1, duration: 0.5 },
       y: { delay: 0.2, duration: 0.5 },
-    },
-  },
-};
-
-const loadingVariants = {
-  enter: {
-    opacity: 1,
-    transition,
-  },
-  center: {
-    scale: 1,
-    opacity: 1,
-    transition: {
-      repeat: Infinity,
-      duration: 1,
-    },
-    rotate: [0, 360],
-  },
-  exit: {
-    opacity: 0,
-    scale: 0.95,
-    transition: {
-      opacity: { duration: 0.5 },
-      scale: { delay: 0.1, duration: 0.5 },
     },
   },
 };
