@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import {
   motion,
   MotionValue,
+  PanInfo,
   transform,
   useAnimationControls,
   useMotionValue,
@@ -56,6 +57,8 @@ export function Grid() {
   const planeLeft = useMotionValue(0);
   const planeTop = useMotionValue(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  // Keep track of my position of origin when i drag the plane
+  const initialX = useRef(0);
 
   useLayoutEffect(() => {
     if (containerRef.current) {
@@ -74,10 +77,12 @@ export function Grid() {
 
   const handleItemClick = ({ isCenter }: { isCenter: boolean }) => {
     if (!isCenter) return;
-    setShowInfo((prev) => (isCenter ? !prev : prev));
+
+    setShowInfo((prev) => (isCenter ? !prev : false));
 
     // Handle animation of elements
     const yOffset = showInfo ? 100 : -100;
+
     gridControls.start({
       top: planeTop.get() + yOffset,
       scale: showInfo ? 1 : 0.8,
@@ -88,7 +93,6 @@ export function Grid() {
   const hideCard = () => {
     if (showInfo) {
       setShowInfo(false);
-
       gridControls.start({
         top: planeTop.get() + 100,
         scale: 1,
@@ -97,8 +101,20 @@ export function Grid() {
     }
   };
 
-  const updateCenter = () => {
-    console.log(planeY.get(), planeX.get());
+  const handleDragStart = () => {
+    initialX.current = planeX.get();
+  };
+
+  const updateCenter = (
+    _: MouseEvent | TouchEvent | PointerEvent,
+    info: PanInfo,
+  ) => {
+    const radius = icon.size / 2;
+    const numberOfCellsToMove = Math.floor(info.offset.x / radius);
+    const alreadyMoved = Math.floor(initialX.current / icon.size) * icon.size;
+    gridControls.start({
+      x: alreadyMoved + icon.size * numberOfCellsToMove,
+    });
   };
 
   return (
@@ -117,11 +133,10 @@ export function Grid() {
 
       {/** The purpose of this div parent wrapping the circle grid container is having a clicable area the size of the grid container
        * so when the user interacts with any point of it we can handle the closing of the card */}
-      <motion.div
+      <div
         className="relative size-full flex items-center justify-center min-h-0"
-        drag={showInfo}
-        onDrag={hideCard}
         onClickCapture={hideCard}
+        onTouchMove={hideCard}
         ref={containerRef}
       >
         <motion.div
@@ -138,8 +153,10 @@ export function Grid() {
           animate={gridControls}
           onDragStart={() => {
             setShowBanner(false);
+            handleDragStart();
           }}
           onDragEnd={updateCenter}
+          dragMomentum={false}
         >
           {grid.map((rows, rowIndex) =>
             rows.map((circle, colIndex) => (
@@ -150,13 +167,12 @@ export function Grid() {
                 planeX={planeX}
                 planeY={planeY}
                 onClick={handleItemClick}
-                showInfo={showInfo}
                 {...circle}
               />
             )),
           )}
         </motion.div>
-      </motion.div>
+      </div>
       <Card show={showInfo} />
     </>
   );
@@ -168,7 +184,6 @@ function Item({
   planeX,
   planeY,
   onClick,
-  showInfo,
   ...circleProps
 }: Readonly<
   {
@@ -176,7 +191,6 @@ function Item({
     col: number;
     planeX: MotionValue<number>;
     planeY: MotionValue<number>;
-    showInfo: boolean;
     onClick: ({ isCenter }: { isCenter: boolean }) => void;
   } & Circle
 >) {
@@ -184,7 +198,6 @@ function Item({
   const y = useMotionValue(0);
   const scale = useMotionValue(circleProps.scale);
   const [isCenter, setIsCenter] = useState(false);
-  const [debugScale, setDebugScale] = useState(0);
 
   /**
    * This is the distance of this circle from the point 0,0 of the drag plane
@@ -213,8 +226,7 @@ function Item({
 
         const result = Math.min(xScale.current, yScale.current);
         scale.set(result);
-        setDebugScale(result);
-        setIsCenter(result > 0.9 && result < 1.1);
+        setIsCenter(result > 0.86 && result < 1.1);
       };
 
       const transformScaleOnY = (v: number) => {
@@ -229,8 +241,7 @@ function Item({
 
         const result = Math.min(xScale.current, yScale.current);
         scale.set(result);
-        setDebugScale(result);
-        setIsCenter(result > 0.9 && result < 1.1);
+        setIsCenter(result > 0.86 && result < 1.1);
       };
 
       // Set scale when the drag plan is moving
@@ -246,7 +257,6 @@ function Item({
 
   return (
     <motion.button
-      key={showInfo.toString()}
       style={{
         x,
         y,
@@ -273,12 +283,11 @@ function Item({
         animate={{ opacity: isCenter ? 1 : 0 }}
         transition={{ stiffness: 0.5 }}
       />
-      {/* {circleProps.src.split('/whotels/img/explore/')[1]} */}
       {/* Debugging values */}
       {/* {`${row}-${col}`}
       <br />
       {debugScale.toFixed(2)} */}
-      {debugScale.toFixed(2)}
+      {/* {debugScale.toFixed(2)} */}
     </motion.button>
   );
 }
