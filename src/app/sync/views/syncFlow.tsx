@@ -1,11 +1,15 @@
 import { Header } from '@/components/header';
 import { AnimatePresence, motion } from 'framer-motion';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
+
+const MotionImage = motion(Image);
 
 type Step = {
   type: 'init' | 'step' | 'end';
   text: string;
   src: string;
+  imgSrc?: string;
   duration?: number;
 };
 
@@ -57,38 +61,98 @@ const textVariants = {
   },
 };
 
+const imageVariants = {
+  enter: {
+    y: 50,
+    opacity: 0,
+    transition: {
+      opacity: { duration: 2 },
+    },
+  },
+  center: {
+    zIndex: 1,
+    y: 0,
+    opacity: 1,
+    transition: {
+      opacity: { duration: 2 },
+    },
+  },
+  exit: {
+    zIndex: 0,
+    opacity: 0,
+    scale: 0.95,
+    y: 5,
+    transition: {
+      opacity: { duration: 0.5 },
+      scale: { delay: 0.1, duration: 0.5 },
+      y: { delay: 0.2, duration: 0.5 },
+    },
+  },
+};
+
+const loadingVariants = {
+  enter: {
+    opacity: 1,
+    transition,
+  },
+  center: {
+    scale: 1,
+    opacity: 1,
+    transition: {
+      repeat: Infinity,
+      duration: 1,
+    },
+    rotate: [0, 360],
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    transition: {
+      opacity: { duration: 0.5 },
+      scale: { delay: 0.1, duration: 0.5 },
+    },
+  },
+};
+
 const ITEMS: Step[] = [
   { type: 'init', text: 'Spotify sync', src: '' },
   {
     type: 'step',
     text: 'Tempo is a music discovery tool for your stay.',
     src: '/whotels/video/sync/pillars.webm',
+    imgSrc: '/whotels/img/onboarding/onboarding-1.png',
     duration: 4000,
   },
   {
     type: 'step',
     text: 'Tempo combines expert curation from tastemakers.',
     src: '/whotels/video/sync/pillars.webm',
+    imgSrc: '/whotels/img/onboarding/onboarding-2.png',
     duration: 4000,
   },
   {
     type: 'step',
     text: 'Tempo combines environmental factors, like the weather and time of day.',
     src: '/whotels/video/sync/pillars.webm',
+    imgSrc: '/whotels/img/onboarding/onboarding-3.png',
     duration: 4000,
   },
   {
     type: 'step',
     text: 'Tempo combines your music preferences, like mood and energy.',
     src: '/whotels/video/sync/pillars.webm',
+    imgSrc: '/whotels/img/onboarding/onboarding-4.png',
     duration: 4000,
   },
   {
     type: 'end',
     text: 'Finalizing',
     src: '/whotels/video/loading.webm',
+    imgSrc: '/whotels/img/loading.png',
   },
 ];
+
+const USE_IMAGES = true;
 
 export default function SyncExperience({
   onSyncEnd,
@@ -165,22 +229,33 @@ export default function SyncExperience({
               exit="exit"
             >
               <div className="z-10 size-full flex items-center justify-center">
-                <video
-                  playsInline
-                  controls={false}
-                  autoPlay
-                  muted
-                  disablePictureInPicture
-                >
-                  <source src={currentStep.src} type="video/webm" />
-                  <track
-                    src="/path/to/captions.vtt"
-                    kind="subtitles"
-                    srcLang="en"
-                    label="English"
+                {USE_IMAGES ? (
+                  <MotionImage
+                    key={`image-${step}`}
+                    width={290}
+                    height={290}
+                    src={currentStep.imgSrc}
+                    variants={imageVariants}
+                    alt=""
                   />
-                  Your browser does not support the video tag.
-                </video>
+                ) : (
+                  <video
+                    playsInline
+                    controls={false}
+                    autoPlay
+                    muted
+                    disablePictureInPicture
+                  >
+                    <source src={currentStep.src} type="video/webm" />
+                    <track
+                      src="/path/to/captions.vtt"
+                      kind="subtitles"
+                      srcLang="en"
+                      label="English"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
               </div>
               <motion.p
                 key={`text-${step}`}
@@ -202,22 +277,36 @@ export default function SyncExperience({
               exit="exit"
             >
               <div className="z-10 size-full flex items-center justify-center">
-                <video
-                  playsInline
-                  controls={false}
-                  autoPlay
-                  muted
-                  disablePictureInPicture
-                >
-                  <source src={currentStep.src} type="video/webm" />
-                  <track
-                    src="/path/to/captions.vtt"
-                    kind="subtitles"
-                    srcLang="en"
-                    label="English"
+                {USE_IMAGES ? (
+                  <MotionImage
+                    key={`image-${step}`}
+                    width={100}
+                    height={100}
+                    src={currentStep.imgSrc}
+                    variants={loadingVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    alt=""
                   />
-                  Your browser does not support the video tag.
-                </video>
+                ) : (
+                  <video
+                    playsInline
+                    controls={false}
+                    autoPlay
+                    muted
+                    disablePictureInPicture
+                  >
+                    <source src={currentStep.src} type="video/webm" />
+                    <track
+                      src="/path/to/captions.vtt"
+                      kind="subtitles"
+                      srcLang="en"
+                      label="English"
+                    />
+                    Your browser does not support the video tag.
+                  </video>
+                )}
               </div>
               <motion.p
                 key={`text-${step}`}
