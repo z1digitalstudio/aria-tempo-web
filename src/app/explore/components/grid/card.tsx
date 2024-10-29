@@ -4,14 +4,15 @@ import type { Card as CardType } from '.';
 import { ButtonIcon } from '@/components/buttonIcon';
 import Image from 'next/image';
 import CloseIcon from '@/assets/icons/close.svg';
+import clsx from 'clsx';
 
 export const Card = ({ cardInfo }: { cardInfo: CardType | null }) => {
+  const offset = cardInfo?.isScore ? 'mt-[-15rem]' : 'mt-[-15rem]';
   return (
     <AnimatePresence>
       {cardInfo && (
         <motion.div
-          className="absolute inset-x-4 z-20"
-          style={{ top: cardInfo.isScore ? '65%' : '70%' }}
+          className={clsx('absolute inset-x-4 z-20 top-full', offset)}
           variants={ringCardVariants}
           initial="enter"
           animate="center"
@@ -69,8 +70,8 @@ export const CardItem = ({
           </>
         ) : (
           <>
-            <p className="type-label-1">{cardInfo.title}</p>
-            <p className="type-headline-4 mb-8">{cardInfo.description}</p>
+            <p className="type-label-1 mb-6">{cardInfo.title}</p>
+            <p className="type-headline-4 mb-16">{cardInfo.description}</p>
           </>
         )}
         <Image width={200} height={200} src={cardInfo?.src} alt="" />

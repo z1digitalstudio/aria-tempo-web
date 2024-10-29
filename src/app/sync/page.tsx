@@ -34,11 +34,13 @@ export default function Sync() {
     <main className="h-svh">
       <div className="flex flex-col items-start size-full min-h-0">
         {/** Get video with complete circles and, if possible, transparent bg to accomodate to larger screens */}
-        <div className="max-lg:aspect-square w-full min-h-0 flex items-center justify-center bg-[#09090a] flex-1">
+        <div className="max-lg:aspect-square w-full min-h-0 flex items-center justify-center bg-[#09090a] flex-1 overflow-hidden">
           <video
+            playsInline
             controls={false}
             autoPlay
             muted
+            disablePictureInPicture
             className="size-full object-cover max-w-2xl"
           >
             <source
