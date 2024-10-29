@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { ringCardVariants } from './animation';
+import type { Card as CardType } from '.';
 
-export const Card = ({ show }: { show: boolean }) => {
+export const Card = ({ cardInfo }: { cardInfo: CardType | null }) => {
   return (
     <AnimatePresence>
-      {show && (
+      {cardInfo && (
         <motion.div
           className="text-creme absolute -bottom-4 inset-x-4 border border-[#a59078] p-2 z-20"
           style={{
@@ -15,9 +16,12 @@ export const Card = ({ show }: { show: boolean }) => {
           animate="center"
           exit="exit"
         >
-          <div className="border border-creme p-6 text-center">
-            <p className="type-label-1">Your unique score</p>
-            <p className="type-number">94.6</p>
+          <div className="border border-creme px-6 pt-6 pb-12 text-center flex flex-col gap-4">
+            {/* <p className="type-label-1">Your unique score</p>
+            <p className="type-number">94.6</p> */}
+
+            <p className="type-label-1">{cardInfo.title}</p>
+            <p className="type-headline-4">{cardInfo.description}</p>
           </div>
         </motion.div>
       )}

@@ -14,6 +14,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { Card } from './card';
 import Image from 'next/image';
 import { Banner } from './banner';
+import { INSIGHTS } from './constants';
 
 const MotionImage = motion.create(Image);
 
@@ -27,11 +28,17 @@ export const icon = {
 // Grid is as bigger as the circles if contains
 const gridSize = icon.size * numberOfItems;
 
+export type Card = {
+  title: string;
+  description: string;
+};
+
 type Circle = {
   x: number;
   y: number;
   src: string;
   scale: number;
+  card: Card;
 };
 
 const createCircle = (col: number, row: number) => {
@@ -40,6 +47,7 @@ const createCircle = (col: number, row: number) => {
     y: 0,
     src: `/whotels/img/explore/shape-${row}-${col}.png`,
     scale: 1,
+    card: INSIGHTS[row + 1 + col],
   };
 };
 
@@ -71,29 +79,35 @@ export function Grid() {
     }
   }, [planeLeft, planeTop]);
 
-  const [showInfo, setShowInfo] = useState(false);
+  const [cardInfo, setCardInfo] = useState<Card | null>(null);
   const [showBanner, setShowBanner] = useState(true);
   const gridControls = useAnimationControls();
 
-  const handleItemClick = ({ isCenter }: { isCenter: boolean }) => {
+  const handleItemClick = ({
+    isCenter,
+    circle,
+  }: {
+    isCenter: boolean;
+    circle: Circle;
+  }) => {
+    setCardInfo(() => (isCenter ? circle.card : null));
+
     if (!isCenter) return;
-
-    setShowInfo((prev) => (isCenter ? !prev : false));
-
     // Handle animation of elements
-    const yOffset = showInfo ? 100 : -100;
+    const yOffset = cardInfo ? 100 : -100;
 
     gridControls.start({
       top: planeTop.get() + yOffset,
-      scale: showInfo ? 1 : 0.8,
+      // Removing this for now cause it creates an issue with scales and a displacement on the x axis. Review later.
+      // scale: showInfo ? 1 : 0.8,
       transition: { duration: 0.5 },
     });
   };
 
   const hideCard = (e: React.MouseEvent | React.TouchEvent) => {
-    if (showInfo) {
+    if (cardInfo) {
       e.stopPropagation();
-      setShowInfo(false);
+      setCardInfo(null);
       gridControls.start({
         top: planeTop.get() + 100,
         scale: 1,
@@ -123,7 +137,7 @@ export function Grid() {
       {/* Radial bg overlay which makes the circles darker on the edges of the screen */}
       <motion.div
         animate={{
-          opacity: showInfo ? 0 : 0.7,
+          opacity: cardInfo ? 0 : 0.7,
           transition: { type: 'tween', duration: 1.2 },
         }}
         className="explore-bg-overlay explore-bg-overlay-gradient absolute inset-0 z-10 pointer-events-none"
@@ -149,7 +163,7 @@ export function Grid() {
             left: planeLeft,
             top: planeTop,
           }}
-          drag={!showInfo}
+          drag={!cardInfo}
           className="absolute top-0 left-0"
           animate={gridControls}
           onDragStart={() => {
@@ -174,7 +188,7 @@ export function Grid() {
           )}
         </motion.div>
       </div>
-      <Card show={showInfo} />
+      <Card cardInfo={cardInfo} />
     </>
   );
 }
@@ -192,13 +206,20 @@ function Item({
     col: number;
     planeX: MotionValue<number>;
     planeY: MotionValue<number>;
-    onClick: ({ isCenter }: { isCenter: boolean }) => void;
+    onClick: ({
+      isCenter,
+      circle,
+    }: {
+      isCenter: boolean;
+      circle: Circle;
+    }) => void;
   } & Circle
 >) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const scale = useMotionValue(circleProps.scale);
   const [isCenter, setIsCenter] = useState(false);
+  const [debugScale, setDebugScale] = useState(0);
 
   /**
    * This is the distance of this circle from the point 0,0 of the drag plane
@@ -227,6 +248,7 @@ function Item({
 
         const result = Math.min(xScale.current, yScale.current);
         scale.set(result);
+        setDebugScale(result);
         setIsCenter(result > 0.86 && result < 1.1);
       };
 
@@ -242,6 +264,7 @@ function Item({
 
         const result = Math.min(xScale.current, yScale.current);
         scale.set(result);
+        setDebugScale(result);
         setIsCenter(result > 0.86 && result < 1.1);
       };
 
@@ -272,7 +295,7 @@ function Item({
         'rounded-full absolute text-creme outline-none',
       )}
       onClick={() => {
-        onClick({ isCenter });
+        onClick({ isCenter, circle: circleProps });
       }}
     >
       <MotionImage
@@ -288,7 +311,7 @@ function Item({
       {/* {`${row}-${col}`}
       <br />
       {debugScale.toFixed(2)} */}
-      {/* {debugScale.toFixed(2)} */}
+      {debugScale.toFixed(2)}
     </motion.button>
   );
 }
