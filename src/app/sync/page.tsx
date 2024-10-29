@@ -26,7 +26,7 @@ export default function Sync() {
     push(links.explore);
   };
 
-  if (syncState === 'syncing') {
+  if (syncState !== 'syncing') {
     return <SyncExperience onSyncEnd={handleSpotifySyncEnd} />;
   }
 

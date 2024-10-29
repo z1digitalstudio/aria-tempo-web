@@ -4,7 +4,12 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const MotionImage = motion(Image);
-type Step = { type: 'init' | 'step' | 'end'; text: string; image: string };
+type Step = {
+  type: 'init' | 'step' | 'end';
+  text: string;
+  src: string;
+  duration?: number;
+};
 
 const transition = {
   opacity: { duration: 2, delay: 0.1 },
@@ -17,23 +22,15 @@ const transition = {
 };
 
 const parentVariants = {
-  enter: {
-    opacity: 0,
-  },
+  enter: {},
   center: {
-    opacity: 1,
     transition: {
       duration: 1,
       staggerChildren: 0.3,
       staggerDirection: -1,
     },
   },
-  exit: {
-    transition: {
-      duration: 1,
-      staggerChildren: 0.1,
-    },
-  },
+  exit: {},
 };
 
 const textVariants = {
@@ -48,35 +45,6 @@ const textVariants = {
     scale: 1,
     opacity: 1,
     transition,
-  },
-  exit: {
-    zIndex: 0,
-    opacity: 0,
-    scale: 0.95,
-    y: 5,
-    transition: {
-      opacity: { duration: 0.5 },
-      scale: { delay: 0.1, duration: 0.5 },
-      y: { delay: 0.2, duration: 0.5 },
-    },
-  },
-};
-
-const imageVariants = {
-  enter: {
-    y: 50,
-    opacity: 0,
-    transition: {
-      opacity: { duration: 2 },
-    },
-  },
-  center: {
-    zIndex: 1,
-    y: 0,
-    opacity: 1,
-    transition: {
-      opacity: { duration: 2 },
-    },
   },
   exit: {
     zIndex: 0,
@@ -116,31 +84,35 @@ const loadingVariants = {
 };
 
 const ITEMS: Step[] = [
-  { type: 'init', text: 'Spotify sync', image: '' },
+  { type: 'init', text: 'Spotify sync', src: '' },
   {
     type: 'step',
     text: 'Tempo is a music discovery tool for your stay.',
-    image: '/whotels/img/onboarding/onboarding-1.png',
+    src: '/whotels/video/sync/pillars.webm',
+    duration: 4000,
   },
   {
     type: 'step',
     text: 'Tempo combines expert curation from tastemakers.',
-    image: '/whotels/img/onboarding/onboarding-2.png',
+    src: '/whotels/video/sync/pillars.webm',
+    duration: 4000,
   },
   {
     type: 'step',
     text: 'Tempo combines environmental factors, like the weather and time of day.',
-    image: '/whotels/img/onboarding/onboarding-3.png',
+    src: '/whotels/video/sync/pillars.webm',
+    duration: 4000,
   },
   {
     type: 'step',
     text: 'Tempo combines your music preferences, like mood and energy.',
-    image: '/whotels/img/onboarding/onboarding-4.png',
+    src: '/whotels/video/sync/pillars.webm',
+    duration: 4000,
   },
   {
     type: 'end',
     text: 'Finalizing',
-    image: '/whotels/img/loading.png',
+    src: '/whotels/img/loading.png',
   },
 ];
 
@@ -150,23 +122,32 @@ export default function SyncExperience({
   onSyncEnd: () => void;
 }>) {
   const [step, setStep] = useState(0);
+  const currentStep = ITEMS[step];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (step === ITEMS.length - 1) {
-        onSyncEnd();
+      if (step === 3 - 1) {
+        // onSyncEnd();
       } else {
         setStep(step + 1);
       }
-    }, 3000);
+    }, currentStep?.duration ?? 3000);
 
     return () => clearInterval(interval);
   }, [step, onSyncEnd]);
 
-  const currentStep = ITEMS[step];
-
   return (
     <div className="flex flex-col bg-black">
+      <AnimatePresence>
+        {step > 0 && (
+          <motion.div
+            animate={{ opacity: 0.7 }}
+            initial={{ opacity: 0 }}
+            className="z-0 absolute inset-0 bg-whotels-splash bg-[length:240%] bg-[left_top_30%] bg-no-repeat lg:bg-cover lg:bg-[left_top_30%]"
+          ></motion.div>
+        )}
+      </AnimatePresence>
+
       <Header className="absolute inset-x-0 z-10" />
       <main className="bg-black text-white size-full h-svh items-center justify-center flex overflow-hidden">
         <AnimatePresence mode="wait">
@@ -186,21 +167,29 @@ export default function SyncExperience({
           {currentStep.type === 'step' && (
             <motion.div
               key={step}
-              className="flex flex-col size-full bg-[url('/whotels/img/sync/step-bg.png')] bg-center"
+              className="flex flex-col size-full"
               variants={parentVariants}
               initial="enter"
               animate="center"
               exit="exit"
             >
-              <div className="size-full flex items-center justify-center">
-                <MotionImage
-                  key={`image-${step}`}
-                  width={290}
-                  height={290}
-                  src={currentStep.image}
-                  variants={imageVariants}
-                  alt=""
-                />
+              <div className="z-10 size-full flex items-center justify-center">
+                <video
+                  playsInline
+                  controls={false}
+                  autoPlay
+                  muted
+                  disablePictureInPicture
+                >
+                  <source src={currentStep.src} type="video/webm" />
+                  <track
+                    src="/path/to/captions.vtt"
+                    kind="subtitles"
+                    srcLang="en"
+                    label="English"
+                  />
+                  Your browser does not support the video tag.
+                </video>
               </div>
               <motion.p
                 key={`text-${step}`}
@@ -226,7 +215,7 @@ export default function SyncExperience({
                   key={`image-${step}`}
                   width={100}
                   height={100}
-                  src={currentStep.image}
+                  src={currentStep.src}
                   variants={loadingVariants}
                   initial="enter"
                   animate="center"
