@@ -21,7 +21,7 @@ export const numberOfItems = 5;
 
 export const icon = {
   margin: 0,
-  size: 160,
+  size: 180,
 };
 
 // Grid is as bigger as the circles if contains
@@ -90,8 +90,9 @@ export function Grid() {
     });
   };
 
-  const hideCard = () => {
+  const hideCard = (e: React.MouseEvent | React.TouchEvent) => {
     if (showInfo) {
+      e.stopPropagation();
       setShowInfo(false);
       gridControls.start({
         top: planeTop.get() + 100,
