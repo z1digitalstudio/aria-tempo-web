@@ -46,7 +46,7 @@ export const CardItem = ({
   };
   return (
     <div
-      className="w-full md:max-w-xl max-md:h-[75svh] backdrop:bg-black/60 text-creme border border-[#a59078] p-2 open:animate-modalf"
+      className="w-full md:max-w-xl backdrop:bg-black/60 text-creme border border-[#a59078] p-2 open:animate-modalf"
       style={{
         background: getBackgroundGradient(),
       }}
@@ -56,7 +56,7 @@ export const CardItem = ({
           Icon={CloseIcon}
           label="Close modal"
           autoFocus
-          className="absolute top-4 right-4 z-40"
+          className="absolute top-4 right-4 z-40 outline-none focus-within:outline"
           onClick={onClose}
         >
           Close

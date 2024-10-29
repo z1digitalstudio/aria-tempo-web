@@ -57,7 +57,7 @@ export function ExploreView({ showResult }: Readonly<{ showResult: string }>) {
       */}
       <dialog
         ref={dialog}
-        className="w-full md:max-w-xl max-md:h-[75svh] backdrop:bg-black/60 open:animate-modalf"
+        className="w-full md:max-w-xl backdrop:bg-black/60 open:animate-modalf"
       >
         <CardItem
           cardInfo={{
@@ -83,7 +83,7 @@ export function ExploreView({ showResult }: Readonly<{ showResult: string }>) {
             </motion.div>
           )}
         </AnimatePresence>
-        <footer className="border-t border-white border-opacity-20 py-6 px-4">
+        <footer className="border-t border-white border-opacity-20 py-6 px-4 mt-auto">
           <ButtonLink
             href={links.home}
             label="Start listening"
