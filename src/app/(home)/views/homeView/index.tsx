@@ -3,7 +3,6 @@
 import LobbyIcon from '@/assets/icons/lobby.svg';
 import PoolIcon from '@/assets/icons/pool.svg';
 import WeatherIcon from '@/assets/icons/weather.svg';
-import { Button } from '@/components/cta/button';
 import { motion } from 'framer-motion';
 import { animate } from '../../animation';
 import { links } from '@/utils/links';
