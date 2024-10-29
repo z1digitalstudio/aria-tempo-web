@@ -126,15 +126,15 @@ export default function SyncExperience({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (step === 3 - 1) {
-        // onSyncEnd();
+      if (step === ITEMS.length - 1) {
+        onSyncEnd();
       } else {
         setStep(step + 1);
       }
     }, currentStep?.duration ?? 3000);
 
     return () => clearInterval(interval);
-  }, [step, onSyncEnd]);
+  }, [step, onSyncEnd, currentStep.duration]);
 
   return (
     <div className="flex flex-col bg-black">
@@ -143,13 +143,30 @@ export default function SyncExperience({
           <motion.div
             animate={{ opacity: 0.7 }}
             initial={{ opacity: 0 }}
-            className="z-0 absolute inset-0 bg-whotels-splash bg-[length:240%] bg-[left_top_30%] bg-no-repeat lg:bg-cover lg:bg-[left_top_30%]"
+            className="absolute inset-0 bg-whotels-splash bg-[length:240%] bg-[left_top_30%] bg-no-repeat lg:bg-cover lg:bg-[left_top_30%]"
           ></motion.div>
         )}
       </AnimatePresence>
-
-      <Header className="absolute inset-x-0 z-10" />
-      <main className="bg-black text-white size-full h-svh items-center justify-center flex overflow-hidden">
+      <AnimatePresence>
+        {step > 0 && (
+          <div className="relative flex z-30">
+            <Header className="w-full absolute" />
+            <motion.span
+              initial={false}
+              className="bg-white h-[1px] w-full absolute inset-x-0 top-20"
+              animate={{ width: `${(100 / ITEMS.length) * step}%` }}
+              transition={{ duration: 1 }}
+            ></motion.span>
+          </div>
+        )}
+      </AnimatePresence>
+      <main
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0,0,0,0.5) 100%)',
+        }}
+        className="z-10 text-white size-full h-svh items-center justify-center flex overflow-hidden"
+      >
         <AnimatePresence mode="wait">
           {currentStep.type === 'init' && (
             <motion.p
