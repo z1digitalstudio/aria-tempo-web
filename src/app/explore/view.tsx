@@ -64,7 +64,7 @@ export function ExploreView({ showResult }: Readonly<{ showResult: string }>) {
             title: 'Your unique score',
             description: '94.6',
             isScore: true,
-            src: '/whotels/img/explore/shape.png',
+            src: '/whotels/img/explore/shape-2-2.png',
             category: 'all-genre',
           }}
           onClose={closeModal}
