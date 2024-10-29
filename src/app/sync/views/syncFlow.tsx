@@ -112,7 +112,7 @@ const ITEMS: Step[] = [
   {
     type: 'end',
     text: 'Finalizing',
-    src: '/whotels/img/loading.png',
+    src: '/whotels/video/loading.webm',
   },
 ];
 
@@ -154,7 +154,7 @@ export default function SyncExperience({
             <motion.span
               initial={false}
               className="bg-white h-[1px] w-full absolute inset-x-0 top-20"
-              animate={{ width: `${(100 / ITEMS.length) * step}%` }}
+              animate={{ width: `${(100 / ITEMS.length) * (step + 1)}%` }}
               transition={{ duration: 1 }}
             ></motion.span>
           </div>
@@ -221,37 +221,37 @@ export default function SyncExperience({
           {currentStep.type === 'end' && (
             <motion.div
               key={step}
-              className="flex flex-col size-full bg-[url('/whotels/img/sync/step-bg.png')] bg-center"
+              className="flex flex-col size-full"
               variants={parentVariants}
               initial="enter"
               animate="center"
               exit="exit"
             >
-              <div className="size-full flex items-center justify-center">
-                <MotionImage
-                  key={`image-${step}`}
-                  width={100}
-                  height={100}
-                  src={currentStep.src}
-                  variants={loadingVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  alt=""
-                />
-              </div>
-              <div className="text-white z-10 h-24 px-4 pt-4 py-10 text-center">
-                <motion.p
-                  key={`text-${step}`}
-                  className="text-balance type-label-1"
-                  variants={textVariants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
+              <div className="z-10 size-full flex items-center justify-center">
+                <video
+                  playsInline
+                  controls={false}
+                  autoPlay
+                  muted
+                  disablePictureInPicture
                 >
-                  {currentStep.text}
-                </motion.p>
+                  <source src={currentStep.src} type="video/webm" />
+                  <track
+                    src="/path/to/captions.vtt"
+                    kind="subtitles"
+                    srcLang="en"
+                    label="English"
+                  />
+                  Your browser does not support the video tag.
+                </video>
               </div>
+              <motion.p
+                key={`text-${step}`}
+                className="text-balance type-label-1 text-white z-10 h-24 px-4 pt-4 py-10 text-center"
+                variants={textVariants}
+              >
+                {currentStep.text}
+              </motion.p>
             </motion.div>
           )}
         </AnimatePresence>
