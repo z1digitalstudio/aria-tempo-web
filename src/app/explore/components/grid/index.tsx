@@ -28,15 +28,18 @@ export const icon = {
 // Grid is as bigger as the circles if contains
 const gridSize = icon.size * numberOfItems;
 
+export type Category = 'social' | 'emotional' | 'all-genre' | 'cognitive';
 export type Card = {
   title: string;
   description: string;
+  category: Category;
+  src: string;
+  isScore: boolean;
 };
 
 type Circle = {
   x: number;
   y: number;
-  src: string;
   scale: number;
   card: Card;
 };
@@ -45,9 +48,11 @@ const createCircle = (col: number, row: number) => {
   return {
     x: 0,
     y: 0,
-    src: `/whotels/img/explore/shape-${row}-${col}.png`,
     scale: 1,
-    card: INSIGHTS[row + 1 + col],
+    card: {
+      ...INSIGHTS[row + 1 + col],
+      src: `/whotels/img/explore/shape-${row}-${col}.png`,
+    },
   };
 };
 
@@ -124,11 +129,13 @@ export function Grid() {
     _: MouseEvent | TouchEvent | PointerEvent,
     info: PanInfo,
   ) => {
+    //Todo: Missing update on Y
     const radius = icon.size / 2;
     const numberOfCellsToMove = Math.floor(info.offset.x / radius);
     const alreadyMoved = Math.floor(initialX.current / icon.size) * icon.size;
     gridControls.start({
       x: alreadyMoved + icon.size * numberOfCellsToMove,
+      y: 0,
     });
   };
 
@@ -172,6 +179,8 @@ export function Grid() {
           }}
           onDragEnd={updateCenter}
           dragMomentum={false}
+          //Todo: Missing calc drag constraints
+          // dragConstraints={{ left: (gridSize / 2) * -1, right: gridSize / 2 }}
         >
           {grid.map((rows, rowIndex) =>
             rows.map((circle, colIndex) => (
@@ -219,7 +228,7 @@ function Item({
   const y = useMotionValue(0);
   const scale = useMotionValue(circleProps.scale);
   const [isCenter, setIsCenter] = useState(false);
-  const [debugScale, setDebugScale] = useState(0);
+  const [, setDebugScale] = useState(0);
 
   /**
    * This is the distance of this circle from the point 0,0 of the drag plane
@@ -299,7 +308,7 @@ function Item({
       }}
     >
       <MotionImage
-        src={circleProps.src}
+        src={circleProps.card.src}
         alt=""
         fill
         className="object-contain"
@@ -311,7 +320,7 @@ function Item({
       {/* {`${row}-${col}`}
       <br />
       {debugScale.toFixed(2)} */}
-      {debugScale.toFixed(2)}
+      {/* {debugScale.toFixed(2)} */}
     </motion.button>
   );
 }

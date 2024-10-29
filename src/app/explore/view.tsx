@@ -5,10 +5,8 @@ import { Header } from '@/components/header';
 import { links } from '@/utils/links';
 import { Grid } from './components/grid';
 import { useLayoutEffect, useRef, useState } from 'react';
-import { ButtonIcon } from '@/components/buttonIcon';
-import CloseIcon from '@/assets/icons/close.svg';
-import Image from 'next/image';
 import { AnimatePresence, motion } from 'framer-motion';
+import { CardItem } from './components/grid/card';
 
 const gridContainerVariants = {
   enter: {
@@ -59,31 +57,18 @@ export function ExploreView({ showResult }: Readonly<{ showResult: string }>) {
       */}
       <dialog
         ref={dialog}
-        className="w-full md:max-w-xl max-md:h-[75svh] backdrop:bg-black/60 text-creme border border-[#a59078] p-2 open:animate-modalf"
-        style={{
-          background:
-            'radial-gradient(243.85% 120.74% at 47.97% -47.5%, #40382E 0%, #000000 100%)',
-        }}
+        className="w-full md:max-w-xl max-md:h-[75svh] backdrop:bg-black/60 open:animate-modalf"
       >
-        <div className="relative border border-creme p-6 text-center size-full flex flex-col items-center pb-12">
-          <ButtonIcon
-            Icon={CloseIcon}
-            label="Close modal"
-            autoFocus
-            className="absolute top-4 right-4"
-            onClick={closeModal}
-          >
-            Close
-          </ButtonIcon>
-          <p className="type-label-1">Your unique score</p>
-          <p className="type-number mb-8">94.6</p>
-          <Image
-            width={240}
-            height={240}
-            src={'/whotels/img/explore/shape.png'}
-            alt=""
-          />
-        </div>
+        <CardItem
+          cardInfo={{
+            title: 'Your unique score',
+            description: '94.6',
+            isScore: true,
+            src: '/whotels/img/explore/shape.png',
+            category: 'all-genre',
+          }}
+          onClose={closeModal}
+        />
       </dialog>
       <main className="size-full flex-1 flex flex-col min-h-0">
         <AnimatePresence>
