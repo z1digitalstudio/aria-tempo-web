@@ -8,7 +8,8 @@ const MotionImage = motion(Image);
 type Step = {
   type: 'init' | 'step' | 'end';
   text: string;
-  src: string;
+  webmSrc?: string;
+  movSrc?: string;
   imgSrc?: string;
   duration?: number;
 };
@@ -115,44 +116,45 @@ const loadingVariants = {
 };
 
 const ITEMS: Step[] = [
-  { type: 'init', text: 'Spotify sync', src: '' },
+  { type: 'init', text: 'Spotify sync' },
   {
     type: 'step',
     text: 'Tempo is a music discovery tool for your stay.',
-    src: '/whotels/video/sync/pillars.webm',
+    webmSrc: '/whotels/video/sync/pillars.webm',
+    movSrc: '/whotels/video/sync/pillars.webm',
     imgSrc: '/whotels/img/onboarding/onboarding-1.png',
     duration: 3000,
   },
   {
     type: 'step',
     text: 'Tempo combines expert curation from tastemakers.',
-    src: '/whotels/video/sync/pillars.webm',
+    webmSrc: '/whotels/video/sync/pillars.webm',
+    movSrc: '/whotels/video/sync/pillars.webm',
     imgSrc: '/whotels/img/onboarding/onboarding-2.png',
     duration: 3000,
   },
   {
     type: 'step',
     text: 'Tempo combines environmental factors, like the weather and time of day.',
-    src: '/whotels/video/sync/pillars.webm',
+    webmSrc: '/whotels/video/sync/pillars.webm',
+    movSrc: '/whotels/video/sync/pillars.webm',
     imgSrc: '/whotels/img/onboarding/onboarding-3.png',
     duration: 3000,
   },
   {
     type: 'step',
     text: 'Tempo combines your music preferences, like mood and energy.',
-    src: '/whotels/video/sync/pillars.webm',
+    webmSrc: '/whotels/video/sync/pillars.webm',
+    movSrc: '/whotels/video/sync/pillars.webm',
     imgSrc: '/whotels/img/onboarding/onboarding-4.png',
     duration: 3000,
   },
   {
     type: 'end',
     text: 'Finalizing',
-    src: '/whotels/video/loading.webm',
     imgSrc: '/whotels/img/loading.png',
   },
 ];
-
-const USE_IMAGES = true;
 
 export default function SyncExperience({
   onSyncEnd,
@@ -229,7 +231,7 @@ export default function SyncExperience({
               exit="exit"
             >
               <div className="z-10 size-full flex items-center justify-center">
-                {USE_IMAGES ? (
+                {!currentStep.movSrc || !currentStep.webmSrc ? (
                   <MotionImage
                     key={`image-${step}`}
                     width={290}
@@ -246,7 +248,11 @@ export default function SyncExperience({
                     muted
                     disablePictureInPicture
                   >
-                    <source src={currentStep.src} type="video/webm" />
+                    <source
+                      src={currentStep.movSrc}
+                      type='video/mp4; codecs="hvc1"'
+                    />
+                    <source src={currentStep.webmSrc} type="video/webm" />
                     <track
                       src="/path/to/captions.vtt"
                       kind="subtitles"
@@ -277,36 +283,17 @@ export default function SyncExperience({
               exit="exit"
             >
               <div className="z-10 size-full flex items-center justify-center">
-                {USE_IMAGES ? (
-                  <MotionImage
-                    key={`image-${step}`}
-                    width={100}
-                    height={100}
-                    src={currentStep.imgSrc}
-                    variants={loadingVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    alt=""
-                  />
-                ) : (
-                  <video
-                    playsInline
-                    controls={false}
-                    autoPlay
-                    muted
-                    disablePictureInPicture
-                  >
-                    <source src={currentStep.src} type="video/webm" />
-                    <track
-                      src="/path/to/captions.vtt"
-                      kind="subtitles"
-                      srcLang="en"
-                      label="English"
-                    />
-                    Your browser does not support the video tag.
-                  </video>
-                )}
+                <MotionImage
+                  key={`image-${step}`}
+                  width={100}
+                  height={100}
+                  src={currentStep.imgSrc}
+                  variants={loadingVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  alt=""
+                />
               </div>
               <motion.p
                 key={`text-${step}`}
