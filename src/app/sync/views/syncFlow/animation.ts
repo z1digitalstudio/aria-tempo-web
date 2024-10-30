@@ -8,18 +8,6 @@ export const transition = {
   },
 };
 
-const parentVariants = {
-  enter: {},
-  center: {
-    transition: {
-      duration: 1,
-      staggerChildren: 0.3,
-      staggerDirection: -1,
-    },
-  },
-  exit: {},
-};
-
 const textVariants = {
   enter: {
     x: 300,
@@ -47,7 +35,6 @@ const textVariants = {
 };
 
 export const animate = {
-  root: parentVariants,
   init: textVariants,
   text: textVariants,
 };

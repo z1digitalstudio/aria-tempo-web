@@ -1,13 +1,13 @@
 'use client';
 
 import { Header } from '@/components/header';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { animate } from './animation';
 import { ReactNode } from 'react';
 import Image from 'next/image';
 const MotionImage = motion.create(Image);
 
-const SPLASH = true;
+const SPLASH = false;
 
 export default function HomeLayout({ children }: { children: ReactNode }) {
   if (SPLASH) {

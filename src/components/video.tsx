@@ -54,14 +54,16 @@ export function Video({
   );
 }
 
+export type VideoWithTransparency = {
+  mp4Src: string;
+  webmSrc: string;
+};
+
 export const VideoWithTransparency = ({
   mp4Src,
   webmSrc,
   className,
-}: WithClassName<{
-  mp4Src: string;
-  webmSrc: string;
-}>) => {
+}: WithClassName<VideoWithTransparency>) => {
   const sources = [
     { path: mp4Src, type: 'video/mp4; codecs="hvc1"' },
     { path: webmSrc, type: 'video/webm' },

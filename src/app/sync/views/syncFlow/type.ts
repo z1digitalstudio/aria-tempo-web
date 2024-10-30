@@ -1,19 +1,15 @@
-export type TextStep = { text: string; duration: number };
-export type VideoStep = TextStep & {
-  mp4Src: string;
-  webmSrc: string;
-};
+import type { VideoWithTransparency } from '@/components/video';
 
 export type Section =
   | {
-      type: 'init';
-      steps: TextStep[];
+      type: 'spotify-placeholder';
+      duration: number;
+      text: string;
     }
   | {
-      type: 'loop';
-      steps: VideoStep[];
-    }
-  | {
-      type: 'end';
-      steps: VideoStep[];
+      type: 'step';
+      duration: number;
+      video: VideoWithTransparency;
+      steps?: string[];
+      text?: string;
     };
