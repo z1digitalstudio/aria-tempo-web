@@ -50,7 +50,7 @@ const BackgroundImage = ({ children }: { children: ReactNode }) => {
         quality={100}
         priority
       />
-      <div className="relative">{children}</div>
+      <div className="relative size-full">{children}</div>
     </motion.div>
   );
 };
