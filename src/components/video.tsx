@@ -11,6 +11,11 @@
  **/
 
 import { WithClassName } from '@/types';
+import { useEffect, useRef } from 'react';
+
+type VideoProps = {
+  play?: boolean; // deactivates autoplay, play video imperatevely
+};
 
 type VideoSource = { path: string; type?: string };
 type VideoOptions = string | VideoSource | VideoSource[];
@@ -22,25 +27,36 @@ function isVideoSource(src: VideoOptions): src is VideoSource {
 export function Video({
   src,
   className,
-}: WithClassName<{
-  src: VideoOptions;
-}>) {
+  play,
+}: WithClassName<
+  {
+    src: VideoOptions;
+  } & VideoProps
+>) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const initialPlay = useRef(play);
   const isNotArray = isVideoSource(src) || typeof src === 'string';
+
+  const srcs = isNotArray ? [src] : src;
+
+  useEffect(() => {
+    if (play && videoRef.current) videoRef.current.play();
+  }, [play]);
+
   if (isNotArray ? !src : !src.length) {
     console.error('Video missing source files');
     return;
   }
 
-  const srcs = isNotArray ? [src] : src;
-
   return (
     <video
       playsInline
       controls={false}
-      autoPlay
+      autoPlay={initialPlay.current}
       muted
       disablePictureInPicture
       className={className}
+      ref={videoRef}
     >
       {srcs.map((s) => {
         if (typeof s === 'string') {
@@ -63,10 +79,11 @@ export const VideoWithTransparency = ({
   mp4Src,
   webmSrc,
   className,
-}: WithClassName<VideoWithTransparency>) => {
+  ...videoProps
+}: WithClassName<VideoWithTransparency & VideoProps>) => {
   const sources = [
     { path: mp4Src, type: 'video/mp4; codecs="hvc1"' },
     { path: webmSrc, type: 'video/webm' },
   ];
-  return <Video src={sources} className={className} />;
+  return <Video src={sources} className={className} {...videoProps} />;
 };

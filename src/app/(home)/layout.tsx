@@ -3,17 +3,30 @@
 import { Header } from '@/components/header';
 import { motion } from 'framer-motion';
 import { animate } from './animation';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { SplashScreen } from './components/splash';
 import Image from 'next/image';
+
 const MotionImage = motion.create(Image);
 
-const SPLASH = false;
-
 export default function HomeLayout({ children }: { children: ReactNode }) {
-  if (SPLASH) {
+  const [splashWasShown, setSplashWasShown] = useState<boolean>(false);
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem('splash');
+    console.log(stored);
+    setSplashWasShown(!!stored);
+  }, []);
+
+  if (!splashWasShown) {
     return (
       <BackgroundImage>
-        <SplashScreen />
+        <SplashScreen
+          onEnd={() => {
+            sessionStorage.setItem('splash', '1');
+            setSplashWasShown(true);
+          }}
+        />
       </BackgroundImage>
     );
   }
@@ -29,10 +42,6 @@ export default function HomeLayout({ children }: { children: ReactNode }) {
     </BackgroundImage>
   );
 }
-
-const SplashScreen = () => {
-  return <h1>Splash</h1>;
-};
 
 const BackgroundImage = ({ children }: { children: ReactNode }) => {
   return (
