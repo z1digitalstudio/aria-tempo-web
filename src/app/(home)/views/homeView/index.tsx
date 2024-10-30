@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { animate } from '../../animation';
 import { links } from '@/utils/links';
 import { ButtonLink } from '@/components/cta/link';
+import { useState } from 'react';
 
 const ZONES = [
   { label: 'Lobby', icon: LobbyIcon, href: links.lobby },
