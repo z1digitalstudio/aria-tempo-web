@@ -5,7 +5,7 @@ import { links } from '@/utils/links';
 import { Button } from '@/components/cta/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SyncExperience from './views/syncFlow';
+import SyncExperience from './views/syncFlow/index';
 import { Video } from '@/components/video';
 
 export default function Sync() {
