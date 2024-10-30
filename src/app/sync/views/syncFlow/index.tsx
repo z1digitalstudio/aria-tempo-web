@@ -126,14 +126,12 @@ export default function SyncExperience({
               initial="enter"
               animate="center"
             >
-              <div className="z-10 size-full flex items-start pt-24 justify-center">
-                <div className="relative size-[20rem]">
-                  <VideoWithTransparency
-                    mp4Src={currentSection.video.mp4Src}
-                    webmSrc={currentSection.video.webmSrc}
-                    className="size-full absolute top-0 left-0"
-                  />
-                </div>
+              <div className="z-10 size-full flex items-center justify-center">
+                <VideoWithTransparency
+                  mp4Src={currentSection.video.mp4Src}
+                  webmSrc={currentSection.video.webmSrc}
+                  className="max-w-[25rem]"
+                />
               </div>
               {currentSection.text && (
                 <motion.p
