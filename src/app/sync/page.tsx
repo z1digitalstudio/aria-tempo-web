@@ -5,7 +5,8 @@ import { links } from '@/utils/links';
 import { Button } from '@/components/cta/button';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import SyncExperience from './views/syncFlow';
+import SyncExperience from './views/syncFlow/index';
+import { Video } from '@/components/video';
 
 export default function Sync() {
   const { push } = useRouter();
@@ -35,26 +36,10 @@ export default function Sync() {
       <div className="flex flex-col items-start size-full min-h-0">
         {/** Get video with complete circles and, if possible, transparent bg to accomodate to larger screens */}
         <div className="max-lg:aspect-square w-full min-h-0 flex items-center justify-center bg-[#09090a] flex-1 overflow-hidden">
-          <video
-            playsInline
-            controls={false}
-            autoPlay
-            muted
-            disablePictureInPicture
+          <Video
             className="size-full object-cover max-w-2xl"
-          >
-            <source
-              src="/whotels/video/start-sync-experience.mp4"
-              type="video/mp4"
-            />
-            <track
-              src="/path/to/captions.vtt"
-              kind="subtitles"
-              srcLang="en"
-              label="English"
-            />
-            Your browser does not support the video tag.
-          </video>
+            src="/whotels/video/start-sync-experience.mp4"
+          />
         </div>
         <section className="w-full bg-creme mt-auto text-black items-center pt-10 pb-4 px-4 text-xl/6 text-center content-between flex flex-col">
           <div className="flex flex-col gap-6 mb-6">

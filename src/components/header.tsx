@@ -3,7 +3,13 @@ import MenuIcon from '@/assets/icons/menu.svg';
 import { ButtonIcon } from './buttonIcon';
 import clsx from 'clsx';
 
-export const Header = ({ className }: { className?: string }) => {
+export const Header = ({
+  className,
+  hideMenu,
+}: {
+  className?: string;
+  hideMenu?: boolean;
+}) => {
   return (
     <header
       className={clsx(
@@ -17,7 +23,7 @@ export const Header = ({ className }: { className?: string }) => {
           Tempo
         </p>
       </div>
-      <ButtonIcon Icon={MenuIcon} label="Open menu" />
+      {!hideMenu && <ButtonIcon Icon={MenuIcon} label="Open menu" />}
     </header>
   );
 };
