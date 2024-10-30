@@ -85,9 +85,9 @@ export default function SyncExperience({
       <AnimatePresence>
         {currentSection.type !== 'spotify-placeholder' && (
           <div className="relative flex z-30">
-            <Header className="w-full absolute" />
+            <Header className="w-full absolute" hideMenu />
             <motion.span
-              initial={false}
+              initial={{ width: 0 }}
               className="bg-white h-[1px] w-full absolute inset-x-0 top-20"
               animate={{
                 width: getProgressPercentage(sectionIndex, stepIndex),
