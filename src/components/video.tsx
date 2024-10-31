@@ -27,7 +27,7 @@ function isVideoSource(src: VideoOptions): src is VideoSource {
 export function Video({
   src,
   className,
-  play,
+  play = true,
 }: WithClassName<
   {
     src: VideoOptions;
