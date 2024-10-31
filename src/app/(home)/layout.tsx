@@ -3,30 +3,31 @@
 import { Header } from '@/components/header';
 import { motion } from 'framer-motion';
 import { animate } from './animation';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { SplashScreen } from './components/splash';
 import Image from 'next/image';
 
 const MotionImage = motion.create(Image);
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
+export default function HomeLayout({
+  children,
+}: Readonly<{ children: ReactNode }>) {
   const [splashWasShown, setSplashWasShown] = useState<boolean>(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('splash');
-    console.log(stored);
     setSplashWasShown(!!stored);
+  }, []);
+
+  const handleSplashAnimationEnd = useCallback(() => {
+    sessionStorage.setItem('splash', '1');
+    setSplashWasShown(true);
   }, []);
 
   if (!splashWasShown) {
     return (
       <BackgroundImage>
-        <SplashScreen
-          onEnd={() => {
-            sessionStorage.setItem('splash', '1');
-            setSplashWasShown(true);
-          }}
-        />
+        <SplashScreen onEnd={handleSplashAnimationEnd} />
       </BackgroundImage>
     );
   }
