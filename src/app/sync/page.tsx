@@ -35,9 +35,11 @@ export default function Sync() {
     <main className="h-svh">
       <div className="flex flex-col items-start size-full min-h-0">
         {/** Get video with complete circles and, if possible, transparent bg to accomodate to larger screens */}
-        <div className="max-lg:aspect-square w-full min-h-0 flex items-center justify-center bg-[#09090a] flex-1 overflow-hidden">
+
+        <div className="relative max-lg:aspect-square w-full min-h-0 flex items-center justify-center bg-black flex-1 overflow-hidden">
+          <div className="md:block hidden max-w-4xl mx-auto explore-bg-overlay explore-bg-overlay-gradient absolute inset-0 z-10 pointer-events-none" />
           <Video
-            className="size-full object-cover max-w-2xl"
+            className="size-full object-cover md:object-contain max-w-4xl"
             src="/whotels/video/start-sync-experience.mp4"
           />
         </div>
