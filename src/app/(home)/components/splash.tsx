@@ -11,6 +11,10 @@ export const SplashScreen = ({ onEnd }: { onEnd: () => void }) => {
   const [playVideo, setPlayVideo] = useState(false);
 
   useEffect(() => {
+    if (!scope.current) {
+      return;
+    }
+
     async function playSequence() {
       await animate(
         '.whotels-presents',
@@ -28,6 +32,7 @@ export const SplashScreen = ({ onEnd }: { onEnd: () => void }) => {
       setPlayVideo(true);
       setTimeout(onEnd, VIDEO_DURATION);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [animate, onEnd]);
 
   return (
