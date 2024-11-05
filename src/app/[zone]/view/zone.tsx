@@ -17,12 +17,12 @@ const SONGS = [
   {
     title: 'Veiled Remembrance',
     author: 'Janet Redger',
-    imgSrc: '/whotels/img/lobby-song-1.png',
+    imgSrc: '/whotels/img/songs/image-1.png',
   },
   {
     title: 'Glance Out of Casement',
     author: 'nascondiglio',
-    imgSrc: '/whotels/img/lobby-song-2.png',
+    imgSrc: '/whotels/img/songs/image-2.png',
   },
 ];
 
@@ -39,17 +39,12 @@ export function ZoneView({ zone }: Readonly<{ zone: Zone }>) {
           <motion.div variants={animate.header}>
             <Header className="text-white" />
           </motion.div>
-          <motion.main
-            className="relative flex flex-col h-full"
-            variants={animate.root}
-            initial="enter"
-            animate="center"
-          >
+          <main className="relative flex flex-col h-full">
             <motion.div
               variants={animate.content}
               className="flex-1 flex flex-col h-full"
             >
-              <motion.div
+              <motion.nav
                 variants={animate.info}
                 className="px-4 py-4 flex justify-between items-center"
               >
@@ -61,7 +56,7 @@ export function ZoneView({ zone }: Readonly<{ zone: Zone }>) {
                   {zone.label}
                 </p>
                 <ButtonIcon Icon={InfoIcon} label="Learn more" />
-              </motion.div>
+              </motion.nav>
 
               <motion.section
                 variants={animate.list}
@@ -104,7 +99,7 @@ export function ZoneView({ zone }: Readonly<{ zone: Zone }>) {
                 Icon={AddIcon}
               />
             </motion.footer>
-          </motion.main>
+          </main>
         </div>
       </motion.div>
     </div>

@@ -5,11 +5,16 @@ import { motion } from 'framer-motion';
 import { animate } from '../animation';
 import Image from 'next/image';
 import { InputRange } from '@/components/inputRange';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
-export const CustomizeFormView = () => {
+export const CustomizeFormView = ({ onSubmit }: { onSubmit: () => void }) => {
   const [mood, setMood] = useState(50);
   const [energy, setEnergy] = useState(50);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit();
+  };
 
   return (
     <div className="size-full w-svw h-svh min-h-0 overflow-hidden text-white bg-black relative">
@@ -22,7 +27,7 @@ export const CustomizeFormView = () => {
         <header className="type-label-1 flex justify-center items-center text-white h-20 py-6 px-4">
           Customize your playlist
         </header>
-        <main className="flex-1 flex flex-col justify-end">
+        <main className="flex-1 flex flex-col">
           <div className="border-b-white border-b border-opacity-20 pb-4 flex-1 flex items-center justify-center">
             <Image
               src="/whotels/img/personal-shape.svg"
@@ -33,35 +38,37 @@ export const CustomizeFormView = () => {
             />
           </div>
 
-          <InputRange
-            label="Energy"
-            value={energy}
-            onChange={(e) => setEnergy(Number(e.target.value))}
-            steps={[
-              { value: 0, label: 'Low' },
-              { value: 100, label: 'High' },
-            ]}
-            min={0}
-            max={100}
-            id="energy-range"
-            className="py-8 px-6"
-          />
-          <InputRange
-            label="Mood"
-            value={mood}
-            onChange={(e) => setMood(Number(e.target.value))}
-            steps={[
-              { value: 0, label: 'Unfamiliar' },
-              { value: 100, label: 'Familiar' },
-            ]}
-            min={0}
-            max={100}
-            id="mood-range"
-            className="py-8 px-6 border-t border-white border-opacity-20"
-          />
-          <footer className="px-4 pb-6">
-            <Button label="View Playlist" variant="secondary" isFullWidth />
-          </footer>
+          <form className="mt-auto" onSubmit={handleSubmit}>
+            <InputRange
+              label="Energy"
+              value={energy}
+              onChange={(e) => setEnergy(Number(e.target.value))}
+              steps={[
+                { value: 0, label: 'Low' },
+                { value: 100, label: 'High' },
+              ]}
+              min={0}
+              max={100}
+              id="energy-range"
+              className="py-8 px-6"
+            />
+            <InputRange
+              label="Mood"
+              value={mood}
+              onChange={(e) => setMood(Number(e.target.value))}
+              steps={[
+                { value: 0, label: 'Unfamiliar' },
+                { value: 100, label: 'Familiar' },
+              ]}
+              min={0}
+              max={100}
+              id="mood-range"
+              className="py-8 px-6 border-t border-white border-opacity-20"
+            />
+            <footer className="px-4 pb-6">
+              <Button label="View Playlist" variant="secondary" isFullWidth />
+            </footer>
+          </form>
         </main>
       </motion.div>
     </div>
