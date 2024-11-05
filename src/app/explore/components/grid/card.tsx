@@ -35,13 +35,10 @@ export const CardItem = ({
   const getBackgroundGradient = () => {
     switch (cardInfo.category) {
       case 'all-genre':
-        return 'radial-gradient(243.85% 120.74% at 47.97% -47.5%, #40382E 0%, #000000 100%)';
       case 'cognitive':
-        return 'radial-gradient(243.85% 120.74% at 47.97% -47.5%, #59312A 0%, #120806 100%)';
       case 'emotional':
-        return 'radial-gradient(243.85% 120.74% at 47.97% -47.5%, #38225D 0%, #040107 100%)';
       case 'social':
-        return 'radial-gradient(243.85% 120.74% at 47.97% -47.5%, #274327 0%, #091709 100%)';
+        return 'radial-gradient(243.85% 120.74% at 47.97% -47.5%, #40382E 0%, #000000 100%)';
     }
   };
   return (
