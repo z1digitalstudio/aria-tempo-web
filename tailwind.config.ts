@@ -14,8 +14,8 @@ const config: Config = {
   theme: {
     colors: {
       creme: {
-        DEFAULT: '#DCD7C4',
-        dark: '#C3BDA9',
+        DEFAULT: 'var(--color-creme)',
+        dark: 'var(--color-creme-dark)',
       },
       black: {
         DEFAULT: '#000',
@@ -23,6 +23,7 @@ const config: Config = {
         light: '#292929',
       },
       white: '#ffffff',
+      colorFocus: '#7B67D3',
     },
     fontFamily: {
       helios: ['var(--font-helios)'],
