@@ -41,7 +41,7 @@ export const SplashScreen = ({ onEnd }: { onEnd: () => void }) => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: playVideo ? 1 : 0 }}
-        className="tempo-video"
+        className="tempo-video flex items-center justify-center size-full"
       >
         <VideoWithTransparency
           mp4Src="/whotels/video/splash.mp4"
