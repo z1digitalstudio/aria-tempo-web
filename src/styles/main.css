@@ -3,10 +3,41 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --rgb-color-creme: 217, 212, 195;
+    --rgb-color-creme-dark: 195, 189, 169;
+
+    --color-creme: rgb(var(--rgb-color-creme));
+    --color-creme-dark: rgb(var(--rgb-color-creme-dark));
+  }
+
   body {
     @apply font-wsupreme font-normal;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* https://www.smashingmagazine.com/2021/12/create-custom-range-input-consistent-browsers/ */
+  input[type='range'] {
+    @apply appearance-none h-1;
+    cursor: pointer;
+    background: transparent;
+  }
+
+  input[type='range']::-webkit-slider-thumb {
+    @apply bg-creme w-2.5 h-8 appearance-none;
+  }
+  input[type='range']::-moz-range-thumb {
+    @apply bg-creme w-2.5 h-8 border-none rounded-none;
+  }
+  input[type='range']:focus {
+    outline: none;
+  }
+  input[type='range']:focus::-webkit-slider-thumb {
+    @apply border-2 border-colorFocus outline outline-colorFocus outline-[0.1875rem] outline-offset-2;
+  }
+  input[type='range']:focus::-moz-range-thumb {
+    @apply border-2 border-colorFocus outline outline-colorFocus outline-[0.1875rem] outline-offset-2;
   }
 }
 

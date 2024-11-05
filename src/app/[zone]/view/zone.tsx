@@ -5,28 +5,28 @@ import BackIcon from '@/assets/icons/back.svg';
 import AddIcon from '@/assets/icons/add.svg';
 import { Button } from '@/components/cta/button';
 import { motion } from 'framer-motion';
-import { animate } from './animation';
+import { animate } from '../animation';
 import { Header } from '@/components/header';
 import { ButtonIcon } from '@/components/buttonIcon';
 import Image from 'next/image';
 import { links } from '@/utils/links';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Zone } from '../page';
 
 const SONGS = [
   {
     title: 'Veiled Remembrance',
     author: 'Janet Redger',
-    imgSrc: '/whotels/img/lobby-song-1.png',
+    imgSrc: '/whotels/img/songs/image-1.png',
   },
   {
     title: 'Glance Out of Casement',
     author: 'nascondiglio',
-    imgSrc: '/whotels/img/lobby-song-2.png',
+    imgSrc: '/whotels/img/songs/image-2.png',
   },
 ];
 
-export default function Private() {
-  const router = useRouter();
+export function ZoneView({ zone }: Readonly<{ zone: Zone }>) {
   return (
     <div className="size-full h-svh overflow-hidden text-white bg-black relative">
       <motion.div
@@ -39,28 +39,24 @@ export default function Private() {
           <motion.div variants={animate.header}>
             <Header className="text-white" />
           </motion.div>
-          <motion.main
-            className="relative flex flex-col h-full"
-            variants={animate.root}
-            initial="enter"
-            animate="center"
-          >
+          <main className="relative flex flex-col h-full">
             <motion.div
               variants={animate.content}
               className="flex-1 flex flex-col h-full"
             >
-              <motion.div
+              <motion.nav
                 variants={animate.info}
                 className="px-4 py-4 flex justify-between items-center"
               >
-                <ButtonIcon
-                  Icon={BackIcon}
-                  label="Go back"
-                  onClick={() => router.push(links.home)}
-                />
-                <p className="type-label-1 flex gap-1 items-center">Lobby</p>
+                <Link href={links.home}>
+                  <span className="sr-only">Go back</span>
+                  <BackIcon />
+                </Link>
+                <p className="type-label-1 flex gap-1 items-center">
+                  {zone.label}
+                </p>
                 <ButtonIcon Icon={InfoIcon} label="Learn more" />
-              </motion.div>
+              </motion.nav>
 
               <motion.section
                 variants={animate.list}
@@ -82,10 +78,10 @@ export default function Private() {
                         className="flex border-t-white border-t border-opacity-20 p-4 gap-6 items-center"
                       >
                         <Image width={53} height={53} src={s.imgSrc} alt="" />
-                        <p>
+                        <div>
                           <h2>{s.title}</h2>
                           <span className="opacity-50">{s.author}</span>
-                        </p>
+                        </div>
                       </li>
                     );
                   })}
@@ -103,7 +99,7 @@ export default function Private() {
                 Icon={AddIcon}
               />
             </motion.footer>
-          </motion.main>
+          </main>
         </div>
       </motion.div>
     </div>

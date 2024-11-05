@@ -9,8 +9,8 @@ import { links } from '@/utils/links';
 import { ButtonLink } from '@/components/cta/link';
 
 const ZONES = [
-  { label: 'Lobby', icon: LobbyIcon, href: links.lobby },
-  { label: 'Pool', icon: PoolIcon, href: links.lobby },
+  { label: 'Lobby', icon: LobbyIcon, href: links.zone('lobby') },
+  { label: 'Pool', icon: PoolIcon, href: links.zone('pool') },
 ];
 
 const formatCurrentTime = (options: Intl.DateTimeFormatOptions) => {
